@@ -211,20 +211,10 @@ var base_url = '<?php echo base_url() ?>';
           <li class="menu-item-has-children dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-gears"></i>Setting App</a>
             <ul class="sub-menu children dropdown-menu">
-              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('profile'); ?>">Identitas Koperasi</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('sukubunga'); ?>">Suku Bunga</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url(); ?>">Menu 1</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url(); ?>">Menu 2</a></li>
             </ul>
           </li>
-
-          <?php
-          // if($this->ion_auth->is_admin()){
-          //   echo '<h3 class="menu-title">User Management</h3>
-          //         <li>
-          //             <a href="'.base_url("auth").'"> <i class="menu-icon fa fa-group"></i>User List </a>
-          //         </li>';
-          // }
-
-          ?>
 
         </ul>
       </div><!-- /.navbar-collapse -->
@@ -245,9 +235,6 @@ var base_url = '<?php echo base_url() ?>';
         <div class="col-sm-7">
           <a id="menuToggle" class="menutoggle pull-left"><i class="fa fa fa-book"></i></a>
           <div class="header-left">
-            <?php echo "<pre>";
-            print_r($this->session->userdata());
-             ?>
             <!-- <div class="dropdown for-notification">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-plus"></i>

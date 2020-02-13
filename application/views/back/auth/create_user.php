@@ -114,7 +114,9 @@
                 ?>
                 <input type="checkbox" name="groups[]" value="<?php echo $group['id'];?>">
                 <?php echo htmlspecialchars($group['name'],ENT_QUOTES,'UTF-8');?>
+                <?php echo "(".data_korporasi($group['id_korporasi'])['nama_klien'].")"; ?>
                 </label>
+                <br>
             <?php endforeach?>
 
         <?php endif ?>

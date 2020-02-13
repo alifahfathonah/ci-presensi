@@ -5,8 +5,8 @@ class Klien_korporasi_model extends CI_Model{
 
 
     var $table = 'tbl_klien_korporasi';
-    var $column_order = array('id', 'nama_klien', 'alamat', 'kota', 'no_telpon', 'username', 'password');
-    var $column_search = array('id', 'nama_klien', 'alamat', 'kota', 'no_telpon', 'username', 'password');
+    var $column_order = array('id', 'nama_klien', 'alamat', 'kota', 'no_telpon');
+    var $column_search = array('id', 'nama_klien', 'alamat', 'kota', 'no_telpon');
     var $order = array('nama_klien' => 'desc');
 
     public function __construct(){

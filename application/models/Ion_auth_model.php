@@ -1671,7 +1671,7 @@ class Ion_auth_model extends CI_Model
 		// if no id was passed use the current users id
 		$id || $id = $this->session->userdata('user_id');
 
-		return $this->db->select($this->tables['users_groups'].'.'.$this->join['groups'].' as id, '.$this->tables['groups'].'.name, '.$this->tables['groups'].'.description')
+		return $this->db->select($this->tables['users_groups'].'.'.$this->join['groups'].' as id, '.$this->tables['groups'].'.name, '.$this->tables['groups'].'.description, '.$this->tables['groups'].'.id_korporasi')
 		                ->where($this->tables['users_groups'].'.'.$this->join['users'], $id)
 		                ->join($this->tables['groups'], $this->tables['users_groups'].'.'.$this->join['groups'].'='.$this->tables['groups'].'.id')
 		                ->get($this->tables['users_groups']);
@@ -2028,6 +2028,7 @@ class Ion_auth_model extends CI_Model
 		    'user_id'              => $user->id, //everyone likes to overwrite id so we'll use user_id
 				'group_id'						 => $group_data['id'],
 				'group_name'					 => $group_data['name'],
+				'id_korporasi'  			 => $group_data['id_korporasi'],
 		    'old_last_login'       => $user->last_login,
 		    'last_check'           => time(),
 		);

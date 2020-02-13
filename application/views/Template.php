@@ -372,7 +372,6 @@ var base_url = '<?php echo base_url() ?>';
 
     </header><!-- /header -->
     <!-- Header-->
-
     <?php echo $contents; ?>
 
   </div><!-- /#right-panel -->

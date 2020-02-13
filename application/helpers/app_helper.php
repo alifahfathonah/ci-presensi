@@ -280,6 +280,14 @@ function cmb_dinamis_4($name,$table,$field,$pk,$selected=null, $action=null){
     return $cmb;
 }
 
+function data_korporasi($id){
+  $ci = get_instance();
+  $ci->db->where('id', $id);
+  $data = $ci->db->get('tbl_klien_korporasi')->row_array();
+  return $data;
+}
+
+
 if (!function_exists('nsi_round')) {
 	function nsi_round($x) {
 		//$x = ceil($x / 100) * 100;
