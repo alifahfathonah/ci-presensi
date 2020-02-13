@@ -22,4 +22,32 @@ class Klienkorporasi extends CI_Controller{
     $this->template->load('Template', 'back/korporasi/view_klien_korporasi');
   }
 
+  function ajax_list(){
+    $list = $this->Klien_korporasi_model->get_datatables();
+    $data = array();
+    $no = $_POST['start'];
+    foreach ($list as $r) {
+
+      $no++;
+      $row = array();
+      $row[] = $no ;
+      $row[] = $r->nama_klien;
+      $row[] = $r->alamat; //$r->tgl_pinjam_display ;
+      $row[] = $r->kota;
+      $row[] = $r->no_telpon ;
+      $row[] = $r->username;
+      $row[] = "=";
+
+      $data[] = $row;
+    }
+
+    $output = array(
+      "draw" => $_POST['draw'],
+      "recordsTotal" => $this->Klien_korporasi_model->count_all(),
+      "recordsFiltered" => $this->Klien_korporasi_model->count_filtered(),
+      "data" => $data,
+    );
+    echo json_encode($output);
+  }
+
 }

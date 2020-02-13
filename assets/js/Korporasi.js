@@ -1,7 +1,7 @@
 var table;
 var save_method;
 $(document).ready(function() {
-  form_validation();
+//  form_validation();
 
   table = $('#table_korporasi').DataTable({
       "processing": true,

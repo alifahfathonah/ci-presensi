@@ -2,7 +2,7 @@
 <div class="content mt-3">
   <div class="card" style="border-top: solid 3px green">
     <div class="card-body card-block">
-      <h5 class="card-title display-4" style="font-size: 20px">Data Angsuran</h5>
+      <h5 class="card-title display-4" style="font-size: 20px">Data Klien Korporasi</h5>
       <div class="btn-group btn-group-sm float-right" id="button_container">
       </div>
       <hr>
