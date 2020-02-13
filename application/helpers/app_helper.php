@@ -214,6 +214,22 @@ function Terbilang($x){
   }
 }
 
+function cmb_dinamis_korporasi($name,$table,$field,$pk,$selected=null, $action=null){
+    $ci = get_instance();
+    $cmb = "<select id='$name' name='$name' class='form-control-sm form-control input-sm' $action>";
+    $ci->db->where('is_del', 0);
+		$ci->db->order_by($field, 'ASC');
+    $data = $ci->db->get($table)->result();
+		$cmb .= "<option value=''>--Pilih--</option>";
+    foreach ($data as $d){
+        $cmb .="<option value='".$d->$pk."'";
+        $cmb .= $selected==$d->$pk?" selected='selected'":'';
+        $cmb .=">".  strtoupper($d->$field)."</option>";
+    }
+    $cmb .="</select>";
+    return $cmb;
+}
+
 function cmb_dinamis($name,$table,$field,$pk,$selected=null, $action=null){
     $ci = get_instance();
     $cmb = "<select id='$name' name='$name' class='form-control-sm form-control input-sm' $action>";

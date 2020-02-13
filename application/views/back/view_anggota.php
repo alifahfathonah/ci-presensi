@@ -37,6 +37,7 @@
             <tr>
               <th >Photo </th>
               <th >ID Anggota </th>
+              <th >Korporasi </th>
               <th >Nama Lengkap </th>
               <th >Simpanan Pokok </th>
               <th >Simpanan Wajib </th>

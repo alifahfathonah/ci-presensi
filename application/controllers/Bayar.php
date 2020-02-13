@@ -39,7 +39,7 @@ class Bayar extends CI_Controller{
       $row[] = 'PJ' . sprintf('%05d', $r->id) ;
       $row[] = explode(' - ', formatTglIndo_datetime_3($r->tgl_pinjam))[0]; //$r->tgl_pinjam_display ;
       $row[] = $anggota->identitas ;
-      $row[] = $r->nama ;
+      $row[] = $anggota->nama ;
       $row[] = rupiah($r->jumlah) ;
       $row[] = $r->lama_angsuran . " Bulan";
       $row[] = rupiah($r->biaya_adm) ;

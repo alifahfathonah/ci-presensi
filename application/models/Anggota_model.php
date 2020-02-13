@@ -4,8 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Anggota_model extends CI_Model{
 
   var $table = 'tbl_anggota';
-	var $column_order = array('id', 'identitas', 'nama', 'simpanan_pokok', 'simpanan_wajib', 'simpanan_sukarela', 'aktif', 'jk', 'alamat', 'jabatan_id', 'tgl_daftar', 'file_pic');
-	var $column_search = array('id', 'identitas', 'nama', 'simpanan_pokok', 'simpanan_wajib', 'simpanan_sukarela', 'aktif', 'jk', 'alamat', 'jabatan_id', 'tgl_daftar', 'file_pic');
+	var $column_order = array('id', 'id_korporasi', 'identitas', 'nama', 'simpanan_pokok', 'simpanan_wajib', 'simpanan_sukarela', 'aktif', 'jk', 'alamat', 'jabatan_id', 'tgl_daftar', 'file_pic');
+	var $column_search = array('id', 'id_korporasi', 'identitas', 'nama', 'simpanan_pokok', 'simpanan_wajib', 'simpanan_sukarela', 'aktif', 'jk', 'alamat', 'jabatan_id', 'tgl_daftar', 'file_pic');
 	var $order = array('id' => 'asc');
 
   public function __construct(){

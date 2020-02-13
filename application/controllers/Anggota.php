@@ -13,7 +13,7 @@ class Anggota extends CI_Controller{
 
   public function __construct(){
     parent::__construct();
-    $this->load->model(array('Anggota_model'));
+    $this->load->model(array('Anggota_model', 'Klien_korporasi_model'));
     $this->load->library(array('ion_auth', 'form_validation'));
     $this->load->helper(array('url', 'language', 'app_helper'));
 
@@ -43,6 +43,7 @@ class Anggota extends CI_Controller{
       $row = array();
       $row[] = '<img src="'.$photo.'" alt="..." class="img-thumbnail" style="max-witdh:25%; height: auto;">';
       $row[] = 'AG'.sprintf('%04d', $anggota->id) ;
+      $row[] = $this->Klien_korporasi_model->get_by('id', $anggota->id_korporasi)['nama_klien'] ;
       $row[] = $anggota->nama ;
       $row[] = rupiah($anggota->simpanan_pokok) ;
       $row[] = rupiah($anggota->simpanan_wajib) ;
@@ -141,6 +142,7 @@ class Anggota extends CI_Controller{
     $kd_kerja = $this->Anggota_model->get_id_kerja($this->input->post('input_pekerjaan', true));
     $object = array(
       'nama'                => $this->input->post('input_nama', true),
+      'id_korporasi'        => $this->input->post('input_korporasi_id', true),
       'identitas'           => $this->input->post('input_username', true),
       'jk'                  => $this->input->post('input_jenis_kelamin', true),
       'tmp_lahir'           => $this->input->post('input_tempat_lahir', true),
@@ -185,6 +187,7 @@ class Anggota extends CI_Controller{
       $file_name = $this->Anggota_model->_uploadImage(str_replace(' ', '-', $this->input->post('input_nama', true)));
       $object = array(
         'nama'                => $this->input->post('input_nama', true),
+        'id_korporasi'        => $this->input->post('input_korporasi_id', true),
         'identitas'           => $this->input->post('input_username', true),
         'jk'                  => $this->input->post('input_jenis_kelamin', true),
         'tmp_lahir'           => $this->input->post('input_tempat_lahir', true),

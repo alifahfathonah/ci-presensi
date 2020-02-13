@@ -191,6 +191,14 @@
         </div>
 
         <div class="row form-group">
+          <div class="col col-md-5"><label for="selectSm" class=" form-control-label">Korporasi :</label></div>
+          <div class="col-12 col-md-7">
+            <?php echo cmb_dinamis_korporasi('input_korporasi_id','tbl_klien_korporasi','nama_klien','id', $record['id_korporasi']); ?>
+            <!-- <small class="form-text text-danger" id="input_korporasi_id_error"></small> -->
+          </div>
+        </div>
+
+        <div class="row form-group">
           <div class="col col-md-5"><label for="selectSm" class=" form-control-label">Departement :</label></div>
           <div class="col-12 col-md-7">
             <select name="input_departement" id="input_departement" class="form-control-sm form-control">
