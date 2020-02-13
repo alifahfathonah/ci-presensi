@@ -220,7 +220,7 @@ var base_url = '<?php echo base_url() ?>';
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-desktop"></i>Master User</a>
             <ul class="sub-menu children dropdown-menu">
               <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('anggota'); ?>">Data Anggota</a></li>
-              <!-- <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('korporasi'); ?>">Data Korporasi</a></li> -->
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('klienkorporasi'); ?>">Data Korporasi</a></li>
               <?php
               if ($this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
           		{
@@ -479,9 +479,9 @@ var base_url = '<?php echo base_url() ?>';
     echo base_url()."assets/js/pelunasan.js";
     break;
 
-    // case "korporasi":
-    // echo base_url()."assets/js/korporasi.js";
-    // break;
+    case "klienkorporasi":
+    echo base_url()."assets/js/korporasi.js";
+    break;
 
     case "post_angsuran":
     echo base_url()."assets/js/post_angsuran.js";
