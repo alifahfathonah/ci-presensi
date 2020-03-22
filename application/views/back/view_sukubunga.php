@@ -1,4 +1,3 @@
-
 <!-- <div class="breadcrumbs">
     <div class="col-sm-4">
         <div class="page-header float-left">
@@ -16,7 +15,7 @@
 </div> -->
 
 <div class="content flashdata_container">
-    <?php echo $this->session->flashdata('message'); ?>
+  <?php echo $this->session->flashdata('message'); ?>
 </div>
 <div class="content mt-3">
   <div class="card" style="border-top: solid 3px #7ea4b3">
@@ -33,14 +32,14 @@
         <div class="col-md-4">
           <div class="form-group"><label for="company" class=" form-control-label">Tipe Pinjaman Bunga</label>
             <!-- <input name="input_nama_koperasi" id="input_nama_koperasi" type="text" placeholder="-" class="form-control" value="<?php echo $record['pinjaman_bunga_tipe']; ?>"> -->
-            <?php $list = array('A' => 'A: Persen bunga dikali angsuran bulan', 'B' => 'B: Persen bunga dikali total pinjaman' ); ?>
+            <?php $list = array('A' => 'A: Persen bunga dikali angsuran bulan', 'B' => 'B: Persen bunga dikali total pinjaman'); ?>
             <select class="form-control" name="input_pinjaman_bunga_tipe" id="input_pinjaman_bunga_tipe">
-              <?php foreach ($list as $key => $value): ?>
-                <?php if ($key == $record['pinjaman_bunga_tipe']){
-                        $selected = 'selected';
-                      } else {
-                        $selected = '';
-                      }
+              <?php foreach ($list as $key => $value) : ?>
+                <?php if ($key == $record['pinjaman_bunga_tipe']) {
+                  $selected = 'selected';
+                } else {
+                  $selected = '';
+                }
                 ?>
                 <option <?php echo $selected; ?> value="<?php echo $key; ?>"><?php echo $value; ?></option>
               <?php endforeach; ?>
@@ -90,6 +89,12 @@
           </div>
           <div class="form-group"><label for="company" class=" form-control-label">Pajak PPh (%)</label>
             <input name="input_pjk_pph" id="input_pjk_pph" type="text" placeholder="-" class="form-control" value="<?php echo $record['pjk_pph']; ?>">
+          </div>
+          <div class="form-group"><label for="company" class=" form-control-label">Max. Nilai Pinjaman Barang (Rupiah)</label>
+            <input name="input_pjk_pph" id="input_pjk_pph" type="text" placeholder="-" class="form-control" value="<?php echo $record['max_hutang_barang']; ?>">
+          </div>
+          <div class="form-group"><label for="company" class=" form-control-label">Max. Cicilan Pinjaman Barang (Bulan)</label>
+            <input name="input_pjk_pph" id="input_pjk_pph" type="text" placeholder="-" class="form-control" value="<?php echo $record['max_cicilan_barang']; ?>">
           </div>
         </div>
       </div>

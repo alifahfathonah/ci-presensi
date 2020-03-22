@@ -25,9 +25,17 @@ class Simpanan extends CI_Controller{
     $this->template->load('Template', 'back/simpanan/view_simpanan');
   }
 
-  function get_jenis_simpanan($id){
-    $data = $this->Jenissimpanan_model->get_by('id', $id);
-    $result = array( 'result' => $data['jumlah'] );
+  function get_jenis_simpanan($id_anggota=null, $id_jenis_simpanan=null){
+    // $data = $this->Jenissimpanan_model->get_by('id', $id);
+    $data = $this->Anggota_model->get_by('id', $id_anggota);
+    if($id_jenis_simpanan == 40){ // simpanan pokok
+      $result = array( 'result' => $data['simpanan_pokok'] );
+    } else if ($id_jenis_simpanan == 32) { // simpanan sukarela
+      $result = array('result' => $data['simpanan_sukarela']);
+    } else if ($id_jenis_simpanan == 41) { // simpanan wajib
+      $result = array('result' => $data['simpanan_wajib']);
+    }
+    
     echo json_encode($result);
   }
 
@@ -236,7 +244,7 @@ class Simpanan extends CI_Controller{
 
     public function pilih_jenis_simpanan($str){
       if ($str == 'x'){
-        $this->form_validation->set_message('pilih_jenis_simpanan', 'Silahkan Pilih Kas Tujuan');
+        $this->form_validation->set_message('pilih_jenis_simpanan', 'Silahkan Jenis Simpanan');
         return FALSE;
       } else {
         return TRUE;

@@ -2,15 +2,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Post_angsuran_model extends CI_Model{
-
+  private $username = "";
   public function __construct(){
     parent::__construct();
+    $this->username = $this->session->userdata('username');
   }
 
   function save_data_ags_temp(){
     $this->db->trans_start();
-    $this->db->query("delete from tbl_temp_postangsuran where view_temp = '1' and view_client is null and view_client is null");
-    $this->db->query("insert INTO tbl_temp_postangsuran SELECT *, '1' as view_temp, null as view_client, null as view_client_at from v_post_angsuran");
+    $this->db->query("delete from tbl_temp_postangsuran where username = '" . $this->username . "' and view_client is null and view_client is null");
+    $this->db->query("insert INTO tbl_temp_postangsuran SELECT *, '". $this->username ."' as username, '1' as view_temp, null as view_client, null as view_client_at from v_post_angsuran");
     $this->db->trans_complete();
 
     if ($this->db->trans_status() === TRUE) {
@@ -24,18 +25,18 @@ class Post_angsuran_model extends CI_Model{
 
   public function get_data_post_angsuran($post_id = ""){
     if($post_id === ""){
-      $sql = "select * FROM tbl_temp_postangsuran where id_pinjaman != '' and lunas = 'Belum' and view_temp = '1' and view_client is null order by nama asc ";
+      $sql = "select * FROM tbl_temp_postangsuran where username = '" . $this->username . "' and id_pinjaman != '' and lunas = 'Belum' and view_temp = '1' and view_client is null order by nama asc ";
     } else {
-      $sql = "select * FROM tbl_temp_postangsuran where id_pinjaman != '' and lunas = 'Belum' and view_temp = '1' and view_client = '".$post_id."' order by nama asc ";
+      $sql = "select * FROM tbl_temp_postangsuran where username = '" . $this->username . "' and id_pinjaman != '' and lunas = 'Belum' and view_temp = '1' and view_client = '".$post_id."' order by nama asc ";
     }
     return $this->db->query($sql);
   }
 
   public function del_data_post_angsuran($id, $kd, $post_id){
-    if($post_id == "-"){
-      $where = array('id_anggota =' => $id, 'id_pinjaman =' => $kd, 'view_client' => null);
+    if($post_id == ""){
+      $where = array('id_anggota =' => $id, 'id_pinjaman =' => $kd, 'view_client' => null, 'username' => $this->username);
     } else {
-      $where = array('id_anggota =' => $id, 'id_pinjaman =' => $kd, 'view_client' => $post_id) ;
+      $where = array('id_anggota =' => $id, 'id_pinjaman =' => $kd, 'view_client' => $post_id, 'username' => $this->username) ;
     }
 
     $this->db->where($where);
@@ -44,23 +45,23 @@ class Post_angsuran_model extends CI_Model{
 
   public function get_data_post_simpanan($post_id = null){
     if($post_id === null){
-      $sql = "select * FROM tbl_temp_postangsuran where simpanan_sukarela != '0' and simpanan_wajib != '0' and view_client is null group by id_anggota order by nama asc";
+      $sql = "select * FROM tbl_temp_postangsuran where username = '" . $this->username . "' and simpanan_sukarela != '0' and simpanan_wajib != '0' and view_client is null group by id_anggota order by nama asc";
     } else {
-      $sql = "select * FROM tbl_temp_postangsuran where simpanan_sukarela != '0' and simpanan_wajib != '0' and view_client = '".$post_id."' group by id_anggota order by nama asc";
+      $sql = "select * FROM tbl_temp_postangsuran where username = '" . $this->username . "' and simpanan_sukarela != '0' and simpanan_wajib != '0' and view_client = '".$post_id."' group by id_anggota order by nama asc";
     }
     // $sql = "select * FROM tbl_temp_postangsuran where simpanan_sukarela != '0' and simpanan_wajib != '0' group by id_anggota order by nama asc";
     return $this->db->query($sql);
   }
 
   public function del_data_post_simpanan($id, $post_id = ""){
-    $where = array('id_anggota =' => $id);
+    // $where = array('id_anggota =' => $id);
     if($post_id == ""){
-      $where = array('id_anggota =' => $id);
+      $where = array('id_anggota =' => $id, 'username' => $this->username);
     } else {
-      $where = array('id_anggota =' => $id, 'view_client' => $post_id, 'view_temp' => 1);
+      $where = array('id_anggota =' => $id, 'view_client' => $post_id, 'username' => $this->username);
     }
     $this->db->where($where);
-    return $this->db->update('tbl_temp_postangsuran',array('simpanan_sukarela'		=>	0, 'simpanan_pokok'		=>	0, 'simpanan_wajib'		=>	0));
+    return $this->db->update('tbl_temp_postangsuran', array('simpanan_sukarela'		=>	0, 'simpanan_pokok'		=>	0, 'simpanan_wajib'		=>	0));
   }
 
   public function get_tmp($post_id){
@@ -181,7 +182,6 @@ class Post_angsuran_model extends CI_Model{
 
       return $result;
     }
-
   }
 
   function save_log($report_id, $table_name, $table_row_id){
@@ -193,6 +193,11 @@ class Post_angsuran_model extends CI_Model{
       'userid'        => $this->session->userdata('username')
     );
     $this->db->insert('log_bulk_posting_angsuran', $object);
+  }
+
+  function query_log_existing($rep_id){
+    $this->db->where('report_id', $rep_id);
+    return $this->db->get('log_bulk_posting_angsuran');
   }
 
 }

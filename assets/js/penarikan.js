@@ -62,9 +62,9 @@ $(document).ready(function() {
     limit:10,
     templates:{
       suggestion:Handlebars.compile(
-        '<div class="row" onclick="prev({{identitas}})">'+
+        '<div class="row" onclick="prev({{base_id}})">'+
         '<div class="col-md-2" style="padding-right:5px; padding-left:5px;">'+
-        '<img id="img_cilik_{{identitas}}" src="'+img_url+'{{image}}" class="img-thumbnail" width="48" />'+
+        '<img id="img_cilik_{{base_id}}" src="' + img_url + '{{image}}" class="img-thumbnail" width="48" />' +
         '</div>'+
         '<div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{name}}<br>ID: {{id}}</div>'+
         '</div>')
@@ -78,6 +78,10 @@ $(document).ready(function() {
       value = $('#img_cilik_'+identitas).attr('src');
       console.log(value);
       $('#img_prev').attr('src', value);
+      id_anggota = identitas;
+      $('#input_jumlah_penarikan').val("0");
+      // $('#input_jenis_simpanan').val("");
+      document.getElementById("input_jenis_simpanan").selectedIndex = 0;
     } else {
       $('#img_prev').attr('src', base_url + "uploads/photo_default.jpg");
     }
@@ -218,6 +222,7 @@ $(document).ready(function() {
       data: {param: post_parameter},
       url : base_url+"penarikan/export/",
       success: function(html){
+        window.open(base_url + 'kasanggota/cari', "_self")
       }
     });
   }
@@ -436,23 +441,44 @@ $(document).ready(function() {
 
         parameter = [jenis_id, nama_anggota];
 
-        if(nama_anggota !== ""){
-          $('#input_nama_anggota_error').html('');
-          $('#input_nama_anggota').removeClass('is-invalid')
-          $.ajax({
-            type: "POST",
-            data: {param: parameter},
-            dataType: 'json',
-            url : base_url+"penarikan/get_jenis_simpanan/",
-            success: function(data){
-              console.log(data.result);
-              $('#input_jumlah_penarikan').val(data.result);
-            }
-          });
+        if ($('#input_nama_anggota').val() === "") {
+        	$('#input_jumlah_penarikan').val('');
+        	$('#input_nama_anggota_error').html('<b class="fa fa-warning"></b> Nama Anggota Tidak Boleh Kosong');
+        	$('#input_nama_anggota').addClass('is-invalid');
         } else {
-          $('#input_jumlah_penarikan').val('');
-          $('#input_nama_anggota_error').html('<b class="fa fa-warning"></b> Nama Anggota Tidak Boleh Kosong');
-          $('#input_nama_anggota').addClass('is-invalid');
+        	$('#input_nama_anggota_error').html('');
+        	$('#input_nama_anggota').removeClass('is-invalid')
+        	$.ajax({
+        		type: "POST",
+        		data: {
+        			param: parameter
+        		},
+        		dataType: 'json',
+        		url: base_url + "penarikan/get_jenis_simpanan/",
+        		success: function (data) {
+        			console.log(data.result);
+        			$('#input_jumlah_penarikan').val(data.result);
+        		}
+        	});
         }
+
+        // if(nama_anggota !== ""){
+          // $('#input_nama_anggota_error').html('');
+          // $('#input_nama_anggota').removeClass('is-invalid')
+          // $.ajax({
+          //   type: "POST",
+          //   data: {param: parameter},
+          //   dataType: 'json',
+          //   url : base_url+"penarikan/get_jenis_simpanan/",
+          //   success: function(data){
+          //     console.log(data.result);
+          //     $('#input_jumlah_penarikan').val(data.result);
+          //   }
+          // });
+        // } else {
+          // $('#input_jumlah_penarikan').val('');
+          // $('#input_nama_anggota_error').html('<b class="fa fa-warning"></b> Nama Anggota Tidak Boleh Kosong');
+          // $('#input_nama_anggota').addClass('is-invalid');
+        // }
       });
     }

@@ -243,7 +243,7 @@ class Penarikan extends CI_Controller{
 
     public function pilih_simpan_ke_kas($str){
       if ($str == 'x'){
-        $this->form_validation->set_message('pilih_simpan_ke_kas', 'Silahkan Pilih Kas Tujuan');
+        $this->form_validation->set_message('pilih_simpan_ke_kas', 'Silahkan Pilih Kas Asal');
         return FALSE;
       } else {
         return TRUE;

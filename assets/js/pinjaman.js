@@ -4,9 +4,19 @@ var filter_date;
 var start_filter_date;
 var end_filter_date;
 var parameter;
+var biaya_admin;
 $(document).ready(function() {
 
   document.title="Pinjaman - KSU Sakrawarih"
+  biaya_admin = $('#input_biaya_admin').val();
+
+  $('#input_jenis_pinjaman').on('change', function () {
+    if(this.value == 3){
+      $('#input_biaya_admin').val('0');
+    } else if (this.value == 4) {
+    	$('#input_biaya_admin').val(biaya_admin);
+    }
+  });
 
   $('#input_nama_anggota').on('change', function() {
     $('#input_nama_anggota_error').html('');

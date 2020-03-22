@@ -4,9 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Pinjaman extends CI_Controller{
   var $export_data = array();
   var $pdf;
+  var $jenis_pinjaman;
   public function __construct(){
     parent::__construct();
-    $this->load->model(array('Pinjaman_model', 'Anggota_model', 'Jenissimpanan_model', 'Lap_kas_anggota_model', 'Profile_model', 'Angsuran_model'));
+    $this->load->model(array('Pinjaman_model', 'Anggota_model', 'Jenissimpanan_model', 'Lap_kas_anggota_model', 'Profile_model', 'Angsuran_model', 'Sukubunga_model'));
     $this->load->library(array('ion_auth', 'form_validation', 'Pdf', 'PDF_MC_Table'));
     $this->load->helper(array('url', 'language', 'app_helper'));
 
@@ -25,7 +26,8 @@ class Pinjaman extends CI_Controller{
     $data['kas_id']     = $this->Pinjaman_model->get_data_kas();
 		$data['jenis_ags']  = $this->Pinjaman_model->get_data_angsuran();
 		$data['suku_bunga'] = $this->Pinjaman_model->get_data_bunga();
-		$data['biaya']      = $this->Pinjaman_model->get_biaya_adm();
+    $data['biaya']      = $this->Pinjaman_model->get_biaya_adm();
+    $data['opsi_pinjaman_barang']      = $this->Pinjaman_model->get_max_pinjaman_barang();
 
     $this->template->load('Template', 'back/pinjaman/view_pinjaman', $data);
   }
@@ -267,18 +269,18 @@ class Pinjaman extends CI_Controller{
     echo '</tbody> </table>';
   }
 
-  public function validation($method){
+  public function validation(){
     $this->form_validation->set_rules('input_nama_anggota', 'Nama Anggota', 'required',
     array('required' => 'Nama Anggota Tidak Boleh Kosong') );
 
     $this->form_validation->set_rules('input_tanggal_pinjam', 'Tanggal Pinjam', 'required',
     array('required' => 'Tanggal Pinjam Tidak Boleh Kosong') );
 
-    $this->form_validation->set_rules('input_jumlah_pinjaman', 'Nominal', 'required',
+    $this->form_validation->set_rules('input_jumlah_pinjaman', 'Nominal', 'required|callback_max_nilai_pinjaman_barang',
     array('required' => 'Nominal Tidak Boleh Kosong') );
 
     $this->form_validation->set_rules('input_jenis_pinjaman', 'Jenis Pinjaman', 'callback_pilih_jenis_pinjam');
-    $this->form_validation->set_rules('input_lama_angsuran', 'Lama Angsuran', 'callback_pilih_angsuran');
+    $this->form_validation->set_rules('input_lama_angsuran', 'Lama Angsuran', 'callback_pilih_angsuran|callback_max_cicilan_pinjaman_barang');
     $this->form_validation->set_rules('input_ambil_dari_kas', 'Asal Kas', 'callback_pilih_simpan_ke_kas');
 
     if($this->form_validation->run()){
@@ -295,6 +297,36 @@ class Pinjaman extends CI_Controller{
       );
     }
     echo json_encode($array);
+  }
+
+  public function max_nilai_pinjaman_barang($str){
+    $data = $this->Pinjaman_model->get_max_pinjaman_barang();
+    $this->jenis_pinjaman = $this->input->post('input_jenis_pinjaman');
+    if($this->jenis_pinjaman == 3){
+      if ($str > $data['max_hutang_barang']){
+        $this->form_validation->set_message('max_nilai_pinjaman_barang', 'Nominal Barang Tidak Boleh Lebih Dari ' . 'Rp. '. rupiah($data['max_hutang_barang']));
+        return FALSE;
+      } else {
+        return TRUE;
+      }
+    } else {
+      return TRUE;
+    }
+  }
+
+  public function max_cicilan_pinjaman_barang($str){
+    $data = $this->Pinjaman_model->get_max_pinjaman_barang();
+    $this->jenis_pinjaman = $this->input->post('input_jenis_pinjaman');
+    if($this->jenis_pinjaman == 3){
+      if ($str >= $data['max_cicilan_barang'] + 1){
+        $this->form_validation->set_message('max_cicilan_pinjaman_barang', 'Lama Angsuran Tidak Boleh Lebih Dari ' . $data['max_cicilan_barang']);
+        return FALSE;
+      } else {
+        return TRUE;
+      }
+    } else {
+      return TRUE;
+    }
   }
 
   public function pilih_angsuran($str){

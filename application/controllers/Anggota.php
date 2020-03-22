@@ -10,16 +10,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // End load library phpspreadsheet
 
 class Anggota extends CI_Controller{
-
+  var $pdf;
   public function __construct(){
     parent::__construct();
-    $this->load->model(array('Anggota_model', 'Klien_korporasi_model'));
-    $this->load->library(array('ion_auth', 'form_validation'));
+    $this->load->model(array('Anggota_model', 'Klien_korporasi_model', ''));
+    $this->load->library(array('ion_auth', 'form_validation', 'Pdf', 'PDF_MC_Table', 'Pdf_2'));
     $this->load->helper(array('url', 'language', 'app_helper'));
 
     $this->form_validation->set_error_delimiters($this->config->item('error_start_delimiter', 'ion_auth'), $this->config->item('error_end_delimiter', 'ion_auth'));
 
     $this->lang->load('auth');
+    $this->pdf = new FPDF('l', 'mm', 'A4');
 
     if (!$this->ion_auth->logged_in()){
       redirect('auth/login', 'refresh');
@@ -41,7 +42,7 @@ class Anggota extends CI_Controller{
       $gender    = ($anggota->jk == 'L') ? 'Laki-laki' : 'Perempuan' ;
 
       $row = array();
-      $row[] = '<img src="'.$photo.'" alt="..." class="img-thumbnail" style="max-witdh:25%; height: auto;">';
+      $row[] = '<img src="'.$photo.'" alt="..." class="img-thumbnail" style="height: auto;">';
       $row[] = 'AG'.sprintf('%04d', $anggota->id) ;
       $row[] = $this->Klien_korporasi_model->get_by('id', $anggota->id_korporasi)['nama_klien'] ;
       $row[] = $anggota->nama ;
@@ -322,4 +323,118 @@ class Anggota extends CI_Controller{
       echo '</tbody> </table>';
     }
 
+    function laporan_anggota(){
+      $this->template->load('Template', 'back/view_laporan_anggota');
+    }
+
+  public function ajax_list_laporan_anggota()
+  {
+    $list = $this->Anggota_model->get_datatables();
+    $data = array();
+    $no = $_POST['start'];
+    $i=1;
+    foreach ($list as $anggota) {
+
+      $photo     = ($anggota->file_pic == null || $anggota->file_pic == "") ? base_url() . 'uploads/photo_default.jpg' : base_url() . 'uploads/anggota/' . $anggota->file_pic;
+      $is_active = ($anggota->aktif == 'Y') ? 'Aktif' : 'Non Aktif';
+      //jabatan
+      if ($anggota->jabatan_id == "1") {
+        $jabatan = "Pengurus";
+      } else {
+        $jabatan = "Anggota";
+      }
+
+      $row = array();
+
+      $row[] = $no+1;
+      $row[] = $anggota->identitas;
+      $row[] = '<b>'.$anggota->nama.'</b><br>'. $anggota->tmp_lahir . ', '. formatTglIndo($anggota->tgl_lahir);
+      $row[] = $anggota->jk;
+      $row[] = $jabatan;
+      $row[] = $anggota->alamat.'<br>Telp. '.$anggota->notelp;
+      $row[] = $is_active;
+      $row[] = formatTglIndo($anggota->tgl_daftar);
+      $row[] = '<img src="' . $photo . '" alt="..." class="" style="max-witdh:25%; height: auto;">';
+      $data[] = $row;
+      $no++;
+    }
+
+    $output = array(
+      "draw" => $_POST['draw'],
+      "recordsTotal" => $this->Anggota_model->count_all(),
+      "recordsFiltered" => $this->Anggota_model->count_filtered(),
+      "data" => $data,
+    );
+    echo json_encode($output);
   }
+
+  public function cetak()
+  {
+    $pdf = new PDF_MC_Table('l', 'mm', 'A4');
+    $pdf->AliasNbPages();
+    $pdf->addPage();
+
+    // $pdf->SetFont('Arial', 'B', 12);
+    // $pdf->Cell(277, 15, 'Laporan Data Anggota', 0, 1, 'C');
+
+    $pdf->SetFont('Arial', '', 9);
+
+    $pdf->SetWidths(array(10, 20, 50, 32, 10, 20, 80, 30, 25));
+
+    $pdf->SetLineHeight(7);
+
+    $pdf->SetFillColor(210, 221, 242);
+
+    $pdf->SetFont('Arial', 'B', 9);
+    $pdf->Cell(10, 5, 'No.', 1, 0, 'C', TRUE);
+    $pdf->Cell(20, 5, 'ID Anggota', 1, 0, 'C', TRUE);
+    $pdf->Cell(50, 5, 'Nama Anggota', 1, 0, 'C', TRUE);
+    $pdf->Cell(32, 5, 'TTL', 1, 0, 'C', TRUE);
+    $pdf->Cell(10, 5, 'L/P', 1, 0, 'C', TRUE);
+    $pdf->Cell(20, 5, 'Jabatan', 1, 0, 'C', TRUE);
+    $pdf->Cell(80, 5, 'Alamat', 1, 0, 'C', TRUE);
+    $pdf->Cell(30, 5, 'Status Anggota', 1, 0, 'C', TRUE);
+    $pdf->Cell(25, 5, 'Tgl Registrasi', 1, 0, 'C', TRUE);
+    // $pdf->Cell(15, 5, 'Foto', 1, 0, 'C', TRUE);
+
+    $pdf->Ln();
+    $pdf->SetAligns(array('C', 'C', 'L', 'L', 'C', 'C', 'L', 'C', 'C'));
+
+    $list = $this->Anggota_model->get_data()->result();
+    $i = 1;
+
+    // $pdf->SetAutoPageBreak(false);
+
+    $pdf->SetFont('Arial', '', 8);
+    foreach ($list as $anggota) {
+      $photo     = ($anggota->file_pic == null || $anggota->file_pic == "") ? base_url() . 'uploads/photo_default.jpg' : base_url() . 'uploads/anggota/' . $anggota->file_pic;
+      $is_active = ($anggota->aktif == 'Y') ? 'Aktif' : 'Non Aktif';
+      //jabatan
+      if ($anggota->jabatan_id == "1") {
+        $jabatan = "Pengurus";
+      } else {
+        $jabatan = "Anggota";
+      }
+
+      $pdf->setImageKey = [7];
+      $pdf->Row(array(
+        $i,
+        $anggota->identitas,
+        $anggota->nama,
+        $anggota->tmp_lahir . ', ' . formatTglIndo($anggota->tgl_lahir),
+        $anggota->jk,
+        $jabatan,
+        $anggota->alamat . ' - Telp. ' . $anggota->notelp,
+        $is_active,
+        formatTglIndo($anggota->tgl_daftar)
+        // ,$pdf->Image($photo, 262, $pdf->GetY(), 8, 0)
+      ));
+      
+      $i++;
+    }
+
+    $pdf->Output();
+  }
+
+
+}

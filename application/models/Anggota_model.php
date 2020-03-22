@@ -13,6 +13,8 @@ class Anggota_model extends CI_Model{
   }
 
   private function _get_datatables_query(){
+    $this->db->order_by('nama', 'asc');
+    $this->db->where('aktif  = "Y"');
   		$this->db->from($this->table);
   		$i = 0;
   		foreach ($this->column_search as $item){
@@ -101,7 +103,13 @@ class Anggota_model extends CI_Model{
       return $this->db->get('tbl_anggota')->row_array();
     }
 
+    public function get_jabatan($parameter){
+      $this->db->where('id', $parameter);
+      return $this->db->get('jns_jabatan')->row_array();
+    }
+
     public function get_data(){
+      $this->db->where('aktif  = "Y"');
       return $this->db->get('tbl_anggota');
     }
 

@@ -1,4 +1,5 @@
 var table;
+var table_2;
 var save_method;
 $(document).ready(function() {
   form_validation();
@@ -24,6 +25,24 @@ $(document).ready(function() {
           "orderable": false,
       },
       ],
+  });
+
+  table = $('#table_laporan_anggota').DataTable({
+    "processing": true,
+    "serverSide": true,
+    "order": [],
+
+    "ajax": {
+      "url": base_url + "anggota/ajax_list_laporan_anggota/",
+      "type": "POST"
+    },
+
+    "columnDefs": [
+      {
+        "targets": [-1],
+        "orderable": false,
+      },
+    ],
   });
 
 });

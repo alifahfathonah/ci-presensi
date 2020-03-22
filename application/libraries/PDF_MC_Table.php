@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 include_once APPPATH . '/third_party/fpdf181/fpdf.php';
 class PDF_MC_Table extends FPDF {
 
+  protected $imageKey = '';
+
   public function method(){
     parent::__construct();
     //Codeigniter : Write Less Do More
@@ -26,6 +28,11 @@ class PDF_MC_Table extends FPDF {
   //Set line height
   function SetLineHeight($h){
     $this->lineHeight=$h;
+  }
+
+  public function setImageKey($key)
+  {
+    $this->imageKey = $key;
   }
 
   //Calculate the height of the row
@@ -59,10 +66,23 @@ class PDF_MC_Table extends FPDF {
       $y=$this->GetY();
       //Draw the border
       $this->Rect($x,$y,$w,$h);
-      //Print the text
-      $this->MultiCell($w,5,$data[$i],0,$a);
-      //Put the position to the right of the cell
-      $this->SetXY($x+$w,$y);
+
+      //modify functions for image 
+      if (!empty($this->imageKey) && in_array($i, $this->imageKey)) {
+        $ih = $h - 0.5;
+        $iw = $w - 0.5;
+        $ix = $x + 0.25;
+        $iy = $y + 0.25;
+        $this->MultiCell($w, 5, $this->Image($data[$i], $ix, $iy, $iw, $ih), 0, $a);
+      } else {
+        $this->MultiCell($w, 5, $data[$i], 0, $a);
+        $this->SetXY($x + $w, $y);
+      }
+
+      // //Print the text
+      // $this->MultiCell($w,5,$data[$i],0,$a);
+      // //Put the position to the right of the cell
+      // $this->SetXY($x+$w,$y);
     }
     //Go to the next line
     $this->Ln($h);
@@ -160,6 +180,71 @@ class PDF_MC_Table extends FPDF {
     $this->Line(10, 197, 287, 197);
     $this->Cell(0,10,'Halaman '.$this->PageNo().' dari {nb}',0,0,'L');
     $this->Cell(0,10,'Tanggal Cetak : ' . Date('d M Y H:m:s'),0,0,'R');
+  }
+
+  // Inline Image
+  function InlineImage($file, $x = null, $y = null, $w = 0, $h = 0, $type = '', $link = '')
+  {
+    // ----- Code from FPDF->Image() -----
+    // Put an image on the page
+    if ($file == '')
+      $this->Error('Image file name is empty');
+    if (!isset($this->images[$file])) {
+      // First use of this image, get info
+      if ($type == '') {
+        $pos = strrpos($file, '.');
+        if (!$pos)
+          $this->Error('Image file has no extension and no type was specified: ' . $file);
+        $type = substr($file, $pos + 1);
+      }
+      $type = strtolower($type);
+      if ($type == 'jpeg')
+        $type = 'jpg';
+      $mtd = '_parse' . $type;
+      if (!method_exists($this, $mtd))
+        $this->Error('Unsupported image type: ' . $type);
+      $info = $this->$mtd($file);
+      $info['i'] = count($this->images) + 1;
+      $this->images[$file] = $info;
+    } else
+      $info = $this->images[$file];
+
+    // Automatic width and height calculation if needed
+    if ($w == 0 && $h == 0) {
+      // Put image at 96 dpi
+      $w = -96;
+      $h = -96;
+    }
+    if ($w < 0)
+      $w = -$info['w'] * 72 / $w / $this->k;
+    if ($h < 0)
+      $h = -$info['h'] * 72 / $h / $this->k;
+    if ($w == 0)
+      $w = $h * $info['w'] / $info['h'];
+    if ($h == 0)
+      $h = $w * $info['h'] / $info['w'];
+
+    // Flowing mode
+    if ($y === null) {
+      if ($this->y + $h > $this->PageBreakTrigger && !$this->InHeader && !$this->InFooter && $this->AcceptPageBreak()) {
+        // Automatic page break
+        $x2 = $this->x;
+        $this->AddPage($this->CurOrientation, $this->CurPageSize, $this->CurRotation);
+        $this->x = $x2;
+      }
+      $y = $this->y;
+      $this->y += $h;
+    }
+
+    if ($x === null)
+      $x = $this->x;
+    $this->_out(sprintf('q %.2F 0 0 %.2F %.2F %.2F cm /I%d Do Q', $w * $this->k, $h * $this->k, $x * $this->k, ($this->h - ($y + $h)) * $this->k, $info['i']));
+    if ($link)
+      $this->Link($x, $y, $w, $h, $link);
+    # -----------------------
+
+    // Update Y
+    $this->y += $h;
   }
 
 }

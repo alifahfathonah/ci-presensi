@@ -125,9 +125,12 @@ class Post_angsuran extends CI_Controller{
       foreach ($data as $r) {
         $sisa_pinjaman = ($r->jumlah - ($r->ags_per_bulan * $r->bln_sudah_angsur));
         $ags_ke = $r->bln_sudah_angsur + 1;
+
+        $_id_pinjaman = ($r->id_pinjaman === null) ? 0 : $r->id_pinjaman;
+
         echo "<tr title='# ".$r->view_client."'>";
         echo "<td >".$i."</td>";
-        echo "<td >"."<button class='btn btn-sm btn-outline-danger' onclick='deleteDataSimpTemp(\"".$r->nama."\", ".$r->id_anggota.", ".$r->id_pinjaman.", \"".$r->view_client."\")'><b class='fa fa-trash'></b></button>"."</td>";
+        echo "<td >"."<button class='btn btn-sm btn-outline-danger' onclick='deleteDataSimpTemp(\"".$r->nama."\", ".$r->id_anggota.", ".$_id_pinjaman.", \"".$r->view_client."\")'><b class='fa fa-trash'></b></button>"."</td>";
         echo "<td >".$r->nama."</td>";
         echo "<td >".rupiah($r->simpanan_wajib)."</td>";
         echo "<td >".rupiah($r->simpanan_sukarela)."</td>";
@@ -478,8 +481,13 @@ class Post_angsuran extends CI_Controller{
     echo json_encode($result);
   }
 
-  function tes($post_id){
-
+  function check_log_existing($parameter){
+    $data = $this->Post_angsuran_model->query_log_existing($parameter)->num_rows();
+    if($data > 0){
+      echo json_encode(array('status'=>false));
+    } else {
+      echo json_encode(array('status' => true));
+    }
   }
 
 }

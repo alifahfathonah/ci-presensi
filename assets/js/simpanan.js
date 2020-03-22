@@ -4,21 +4,25 @@ var filter_date;
 var start_filter_date;
 var end_filter_date;
 var parameter;
+var id_anggota;
 $(document).ready(function() {
 
   // document.title = 'KSU SakraSetoran Tunai';
 
   $('#input_jenis_simpanan').on('change', function() {
-    // alert( this.value );
-    $.ajax({
-      type: "GET",
-      dataType: 'json',
-      url : base_url+"simpanan/get_jenis_simpanan/"+this.value,
-      success: function(data){
-        console.log(data.result);
-        $('#input_jumlah_simpanan').val(data.result);
-      }
-    });
+    if ($('#input_nama_anggota').val() === "") {
+      alert('Silahlan pilih nama karyawan');
+    } else {
+      $.ajax({
+      	type: "GET",
+      	dataType: 'json',
+      	url: base_url + "simpanan/get_jenis_simpanan/" + id_anggota + "/" + this.value,
+      	success: function (data) {
+      		console.log(data.result);
+      		$('#input_jumlah_simpanan').val(data.result);
+      	}
+      });
+    }
   });
 
   $('#input_tanggal_trans').datetimepicker({
@@ -55,6 +59,9 @@ $(document).ready(function() {
     }
   });
 
+  // console.log(sample_data);
+  
+
   var img_url = base_url + "uploads/anggota/";
 
   $('#prefetch .typeahead').typeahead(null, {
@@ -64,9 +71,9 @@ $(document).ready(function() {
     limit:10,
     templates:{
       suggestion:Handlebars.compile(
-        '<div class="row" onclick="prev({{identitas}})">'+
+        '<div class="row" onclick="prev({{base_id}})">'+
         '<div class="col-md-2" style="padding-right:5px; padding-left:5px;">'+
-        '<img id="img_cilik_{{identitas}}" src="'+img_url+'{{image}}" class="img-thumbnail" width="48" />'+
+        '<img id="img_cilik_{{base_id}}" src="' + img_url + '{{image}}" class="img-thumbnail" width="48" />' +
         '</div>'+
         '<div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{name}}<br>ID: {{id}}</div>'+
         '</div>')
@@ -77,6 +84,11 @@ $(document).ready(function() {
 
   function prev(identitas){
     value = $('#img_cilik_'+identitas).attr('src');
+    console.log(value);
+    id_anggota = identitas;
+    $('#input_jumlah_simpanan').val("");
+    // $('#input_jenis_simpanan').val("");
+    document.getElementById("input_jenis_simpanan").selectedIndex = 0;
     $('#img_prev').attr('src', value);
   }
 

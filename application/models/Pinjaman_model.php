@@ -31,6 +31,7 @@ class Pinjaman_model extends CI_Model{
     }
 
     $this->db->where('dk = "K"');
+    // $this->db->where('is_del = 0');
 
     $this->db->from($this->table);
     $i = 0;
@@ -201,10 +202,10 @@ class Pinjaman_model extends CI_Model{
 
   //data Bunga
   function get_data_bunga() {
-    $this->db->select('*');
-    $this->db->from('suku_bunga');
-    $this->db->where('opsi_key', 'bg_pinjam');
-    $this->db->order_by('id', 'ASC');
+    $this->db->select('bg_pinjam');
+    $this->db->from('suku_bunga_n');
+    // $this->db->where('opsi_key', 'bg_pinjam');
+    // $this->db->order_by('id', 'ASC');
     $query = $this->db->get();
     if($query->num_rows()>0){
       $out = $query->result();
@@ -216,13 +217,28 @@ class Pinjaman_model extends CI_Model{
 
   //data biaya adm
   function get_biaya_adm() {
-    $this->db->select('*');
-    $this->db->from('suku_bunga');
-    $this->db->where('opsi_key', 'biaya_adm');
-    $this->db->order_by('id', 'ASC');
+    $this->db->select('biaya_adm');
+    $this->db->from('suku_bunga_n');
+    // $this->db->where('opsi_key', 'biaya_adm');
+    // $this->db->order_by('id', 'ASC');
     $query = $this->db->get();
     if($query->num_rows()>0){
       $out = $query->result();
+      return $out;
+    } else {
+      return FALSE;
+    }
+  }
+
+  //data max cicilan barang
+  function get_max_pinjaman_barang(){
+    $this->db->select('max_cicilan_barang, max_hutang_barang');
+    $this->db->from('suku_bunga_n');
+    // $this->db->where('opsi_key', 'biaya_adm');
+    // $this->db->order_by('id', 'ASC');
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+      $out = $query->row_array();
       return $out;
     } else {
       return FALSE;
@@ -279,6 +295,9 @@ class Pinjaman_model extends CI_Model{
 
     $this->db->where($where);
     $this->db->update('tbl_pinjaman_h', $object);
+
+    $this->db->where($where);
+    $this->db->update('tbl_pinjaman_d', $object);
 
     if ($this->db->trans_status() === FALSE) {
       $this->db->trans_rollback();

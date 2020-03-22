@@ -6,7 +6,7 @@
 <html class="no-js" lang="en">
 <!--<![endif]-->
 <script>
-var base_url = '<?php echo base_url() ?>';
+  var base_url = '<?php echo base_url() ?>';
 </script>
 
 <head>
@@ -40,148 +40,184 @@ var base_url = '<?php echo base_url() ?>';
 
   <!-- <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'> -->
 
-  <style >
-  .glyphicon	{font-family: "Glyphicons Halflings"}
-  .export_button_group_container{
-    padding-right: 0px;
-  }
+  <style>
+    .glyphicon {
+      font-family: "Glyphicons Halflings"
+    }
 
-  .pol_kiri{
-    padding-left: 0px;
-  }
+    .export_button_group_container {
+      padding-right: 0px;
+    }
 
-  .tracking-detail {
-    padding:3rem 0
-  }
-  #tracking {
-    margin-bottom:1rem
-  }
-  [class*=tracking-status-] p {
-    margin:0;
-    font-size:1.1rem;
-    color:#fff;
-    text-transform:uppercase;
-    text-align:center
-  }
-  [class*=tracking-status-] {
-    padding: 0.85rem 0
-  }
-  .tracking-status-intransit {
-    background-color:#65aee0
-  }
-  .tracking-status-outfordelivery {
-    background-color:#f5a551
-  }
-  .tracking-status-deliveryoffice {
-    background-color:#f7dc6f
-  }
-  .tracking-status-delivered {
-    background-color:#4cbb87
-  }
-  .tracking-status-attemptfail {
-    background-color:#b789c7
-  }
-  .tracking-status-error,.tracking-status-exception {
-    background-color:#d26759
-  }
-  .tracking-status-expired {
-    background-color:#616e7d
-  }
-  .tracking-status-pending {
-    background-color:#ccc
-  }
-  .tracking-status-inforeceived {
-    background-color:#214977
-  }
-  .tracking-list {
-    border:1px solid #e5e5e5
-  }
-  .tracking-item {
-    border-left:1px solid #e5e5e5;
-    position:relative;
-    padding:2rem 1.5rem .5rem 2.5rem;
-    font-size:.9rem;
-    margin-left:3rem;
-    min-height:5rem
-  }
-  .tracking-item:last-child {
-    padding-bottom:4rem
-  }
-  .tracking-item .tracking-date {
-    margin-top:.6rem;
-    margin-bottom:.5rem
-  }
-  .tracking-item .tracking-date span {
-    color:#888;
-    font-size:85%;
-    padding-left:.4rem
-  }
-  .tracking-item .tracking-content {
-    padding:.5rem .8rem;
-    background-color:#f4f4f4;
-    border-radius:.5rem
-  }
-  .tracking-item .tracking-content span {
-    display:block;
-    color:#888;
-    font-size:85%
-  }
-  .tracking-item .tracking-icon {
-    line-height:2.6rem;
-    position:absolute;
-    left:-1.3rem;
-    width:2.6rem;
-    height:2.6rem;
-    text-align:center;
-    border-radius:50%;
-    font-size:1.1rem;
-    background-color:#fff;
-    color:#fff
-  }
-  .tracking-item .tracking-icon.status-sponsored {
-    background-color:#f68
-  }
-  .tracking-item .tracking-icon.status-delivered {
-    background-color:#4cbb87
-  }
-  .tracking-item .tracking-icon.status-outfordelivery {
-    background-color:#f5a551
-  }
-  .tracking-item .tracking-icon.status-deliveryoffice {
-    background-color:#f7dc6f
-  }
-  .tracking-item .tracking-icon.status-attemptfail {
-    background-color:#b789c7
-  }
-  .tracking-item .tracking-icon.status-exception {
-    background-color:#d26759
-  }
-  .tracking-item .tracking-icon.status-inforeceived {
-    background-color:#214977
-  }
-  .tracking-item .tracking-icon.status-intransit {
-    color:#e5e5e5;
-    border:1px solid #e5e5e5;
-    font-size:.6rem
-  }
-  @media(min-width:992px) {
+    .pol_kiri {
+      padding-left: 0px;
+    }
+
+    .tracking-detail {
+      padding: 3rem 0
+    }
+
+    #tracking {
+      margin-bottom: 1rem
+    }
+
+    [class*=tracking-status-] p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #fff;
+      text-transform: uppercase;
+      text-align: center
+    }
+
+    [class*=tracking-status-] {
+      padding: 0.85rem 0
+    }
+
+    .tracking-status-intransit {
+      background-color: #65aee0
+    }
+
+    .tracking-status-outfordelivery {
+      background-color: #f5a551
+    }
+
+    .tracking-status-deliveryoffice {
+      background-color: #f7dc6f
+    }
+
+    .tracking-status-delivered {
+      background-color: #4cbb87
+    }
+
+    .tracking-status-attemptfail {
+      background-color: #b789c7
+    }
+
+    .tracking-status-error,
+    .tracking-status-exception {
+      background-color: #d26759
+    }
+
+    .tracking-status-expired {
+      background-color: #616e7d
+    }
+
+    .tracking-status-pending {
+      background-color: #ccc
+    }
+
+    .tracking-status-inforeceived {
+      background-color: #214977
+    }
+
+    .tracking-list {
+      border: 1px solid #e5e5e5
+    }
+
     .tracking-item {
-      margin-left:10rem
+      border-left: 1px solid #e5e5e5;
+      position: relative;
+      padding: 2rem 1.5rem .5rem 2.5rem;
+      font-size: .9rem;
+      margin-left: 3rem;
+      min-height: 5rem
     }
+
+    .tracking-item:last-child {
+      padding-bottom: 4rem
+    }
+
     .tracking-item .tracking-date {
-      position:absolute;
-      left:-10rem;
-      width:7.5rem;
-      text-align:right
+      margin-top: .6rem;
+      margin-bottom: .5rem
     }
+
     .tracking-item .tracking-date span {
-      display:block
+      color: #888;
+      font-size: 85%;
+      padding-left: .4rem
     }
+
     .tracking-item .tracking-content {
-      padding:0;
-      background-color:transparent
+      padding: .5rem .8rem;
+      background-color: #f4f4f4;
+      border-radius: .5rem
     }
-  }
+
+    .tracking-item .tracking-content span {
+      display: block;
+      color: #888;
+      font-size: 85%
+    }
+
+    .tracking-item .tracking-icon {
+      line-height: 2.6rem;
+      position: absolute;
+      left: -1.3rem;
+      width: 2.6rem;
+      height: 2.6rem;
+      text-align: center;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      background-color: #fff;
+      color: #fff
+    }
+
+    .tracking-item .tracking-icon.status-sponsored {
+      background-color: #f68
+    }
+
+    .tracking-item .tracking-icon.status-delivered {
+      background-color: #4cbb87
+    }
+
+    .tracking-item .tracking-icon.status-outfordelivery {
+      background-color: #f5a551
+    }
+
+    .tracking-item .tracking-icon.status-deliveryoffice {
+      background-color: #f7dc6f
+    }
+
+    .tracking-item .tracking-icon.status-attemptfail {
+      background-color: #b789c7
+    }
+
+    .tracking-item .tracking-icon.status-exception {
+      background-color: #d26759
+    }
+
+    .tracking-item .tracking-icon.status-inforeceived {
+      background-color: #214977
+    }
+
+    .tracking-item .tracking-icon.status-intransit {
+      color: #e5e5e5;
+      border: 1px solid #e5e5e5;
+      font-size: .6rem
+    }
+
+    @media(min-width:992px) {
+      .tracking-item {
+        margin-left: 10rem
+      }
+
+      .tracking-item .tracking-date {
+        position: absolute;
+        left: -10rem;
+        width: 7.5rem;
+        text-align: right
+      }
+
+      .tracking-item .tracking-date span {
+        display: block
+      }
+
+      .tracking-item .tracking-content {
+        padding: 0;
+        background-color: transparent
+      }
+    }
   </style>
 
 </head>
@@ -223,9 +259,9 @@ var base_url = '<?php echo base_url() ?>';
               <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('klienkorporasi'); ?>">Data Korporasi</a></li>
               <?php
               if ($this->ion_auth->is_admin()) // remove this elseif if you want to enable this for non-admins
-          		{
-          			echo '<li><i class="fa fa-folder-open-o"></i><a href="'.base_url('auth').'">Data Pengguna</a></li>';
-          		}
+              {
+                echo '<li><i class="fa fa-folder-open-o"></i><a href="' . base_url('auth') . '">Data Pengguna</a></li>';
+              }
               ?>
 
             </ul>
@@ -273,9 +309,9 @@ var base_url = '<?php echo base_url() ?>';
           <li class="menu-item-has-children dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Laporan</a>
             <ul class="sub-menu children dropdown-menu">
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-basic.html">Data Anggota</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Kas Anggota</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Transaksi Kas</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('anggota/laporan_anggota'); ?>">Data Anggota</a></li>
+              <li><i class=" fa fa-folder-open-o"></i><a href="<?php echo base_url('kasanggota'); ?>">Kas Anggota</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('laptranskas'); ?>">Transaksi Kas</a></li>
               <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Saldo Kas</a></li>
               <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Buku Besar</a></li>
               <li><i class="fa fa-folder-open-o"></i><a href="tables-basic.html">Kas Simpanan</a></li>
@@ -318,7 +354,7 @@ var base_url = '<?php echo base_url() ?>';
             <?php
             // echo "<pre>";
             // print_r($this->session->userdata());
-             ?>
+            ?>
             <!-- <div class="dropdown for-notification">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-plus"></i>
@@ -362,7 +398,7 @@ var base_url = '<?php echo base_url() ?>';
             </button>
 
             <div class="user-menu dropdown-menu">
-              <a class="nav-link" href="<?php echo base_url('auth/edit_user/'.$this->session->userdata('user_id')); ?>"><i class="fa fa-key"></i> Ubah Password</a>
+              <a class="nav-link" href="<?php echo base_url('auth/edit_user/' . $this->session->userdata('user_id')); ?>"><i class="fa fa-key"></i> Ubah Password</a>
               <a class="text-danger nav-link" href="<?php echo base_url('auth/logout/'); ?>"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
           </div>
@@ -407,86 +443,93 @@ var base_url = '<?php echo base_url() ?>';
   <script src="<?php echo base_url('assets/js/'); ?>bootstrap-datetimepicker.id.js"></script> -->
 
   <script type="text/javascript">
-  var $ = jQuery;
+    var $ = jQuery;
   </script>
 
   <script src="<?php
-  $uriSegment = $this->uri->segment(1);
-  switch ($uriSegment) {
-    case "anggota":
-    echo base_url()."assets/js/anggota.js";
-    break;
-    case "jenisusaha":
-    echo base_url()."assets/js/jenisusaha.js";
-    break;
-    case "jenissimpanan":
-    echo base_url()."assets/js/jenissimpanan.js";
-    break;
-    case "jenisakun":
-    echo base_url()."assets/js/jenisakun.js";
-    break;
-    case "jeniskas":
-    echo base_url()."assets/js/jeniskas.js";
-    break;
-    case "jenisangsuran":
-    echo base_url()."assets/js/jenisangsuran.js";
-    break;
-    case "databarang":
-    echo base_url()."assets/js/databarang.js";
-    break;
-    case "pemasukankas":
-    echo base_url()."assets/js/pemasukankas.js";
-    break;
-    case "pengeluarankas":
-    echo base_url()."assets/js/pengeluarankas.js";
-    break;
-    case "transferkas":
-    echo base_url()."assets/js/transferkas.js";
-    break;
-    case "simpanan":
-    echo base_url()."assets/js/simpanan.js";
-    break;
-    case "penarikan":
-    echo base_url()."assets/js/penarikan.js";
-    break;
-    case "pinjaman":
-    echo base_url()."assets/js/pinjaman.js";
-    break;
-    case "bayar":
-    echo base_url()."assets/js/bayar.js";
-    break;
-    case "pelunasan":
-    echo base_url()."assets/js/pelunasan.js";
-    break;
-    case "post_angsuran":
-    echo base_url()."assets/js/post_angsuran.js";
-    break;
+                $uriSegment = $this->uri->segment(1);
+                switch ($uriSegment) {
+                  case "anggota":
+                    echo base_url() . "assets/js/anggota.js";
+                    break;
+                  case "jenisusaha":
+                    echo base_url() . "assets/js/jenisusaha.js";
+                    break;
+                  case "jenissimpanan":
+                    echo base_url() . "assets/js/jenissimpanan.js";
+                    break;
+                  case "jenisakun":
+                    echo base_url() . "assets/js/jenisakun.js";
+                    break;
+                  case "jeniskas":
+                    echo base_url() . "assets/js/jeniskas.js";
+                    break;
+                  case "jenisangsuran":
+                    echo base_url() . "assets/js/jenisangsuran.js";
+                    break;
+                  case "databarang":
+                    echo base_url() . "assets/js/databarang.js";
+                    break;
+                  case "pemasukankas":
+                    echo base_url() . "assets/js/pemasukankas.js";
+                    break;
+                  case "pengeluarankas":
+                    echo base_url() . "assets/js/pengeluarankas.js";
+                    break;
+                  case "transferkas":
+                    echo base_url() . "assets/js/transferkas.js";
+                    break;
+                  case "simpanan":
+                    echo base_url() . "assets/js/simpanan.js";
+                    break;
+                  case "penarikan":
+                    echo base_url() . "assets/js/penarikan.js";
+                    break;
+                  case "pinjaman":
+                    echo base_url() . "assets/js/pinjaman.js";
+                    break;
+                  case "bayar":
+                    echo base_url() . "assets/js/bayar.js";
+                    break;
+                  case "pelunasan":
+                    echo base_url() . "assets/js/pelunasan.js";
+                    break;
+                  case "post_angsuran":
+                    echo base_url() . "assets/js/post_angsuran.js";
+                    break;
 
-    case "angsuran":
-    echo base_url()."assets/js/angsuran.js";
-    break;
+                  case "angsuran":
+                    echo base_url() . "assets/js/angsuran.js";
+                    break;
 
-    case "angsuran_lunas":
-    echo base_url()."assets/js/angsuran_lunas.js";
-    break;
+                  case "angsuran_lunas":
+                    echo base_url() . "assets/js/angsuran_lunas.js";
+                    break;
 
-    case "bayar":
-    echo base_url()."assets/js/bayar.js";
-    break;
+                  case "bayar":
+                    echo base_url() . "assets/js/bayar.js";
+                    break;
 
-    case "pelunasan":
-    echo base_url()."assets/js/pelunasan.js";
-    break;
+                  case "pelunasan":
+                    echo base_url() . "assets/js/pelunasan.js";
+                    break;
 
-    case "klienkorporasi":
-    echo base_url()."assets/js/korporasi.js";
-    break;
+                  case "klienkorporasi":
+                    echo base_url() . "assets/js/korporasi.js";
+                    break;
 
-    case "post_angsuran":
-    echo base_url()."assets/js/post_angsuran.js";
-    break;
-  }
-  ?>"></script>
+                  case "post_angsuran":
+                    echo base_url() . "assets/js/post_angsuran.js";
+                    break;
+
+                  case "kasanggota":
+                    echo base_url() . "assets/js/kasanggota.js";
+                    break;
+                  case "laptranskas":
+                    echo base_url() . "assets/js/laptranskas.js";
+                    break;
+                }
+                ?>"></script>
 
 </body>
 

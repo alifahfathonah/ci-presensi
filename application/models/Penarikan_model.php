@@ -151,6 +151,7 @@ class Penarikan_model extends CI_Model{
       foreach($query->result_array() as $row)
       {
         $output[] = array(
+          'base_id'    => $row["id"],
           'name'       => $row["nama"],
           'id'         => 'AG'.sprintf('%04d', $row["id"]),
           'identitas'  => $row["identitas"],

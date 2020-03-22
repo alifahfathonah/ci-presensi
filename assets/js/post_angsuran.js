@@ -52,7 +52,7 @@ function getDataTemp(){
       }
     },
     error: function (jqXHR, textStatus, errorThrown){
-      alert('Get Data Angsuran Temp Error');
+      // alert('Get Data Angsuran Temp Error');
     }
   });
 }
@@ -85,7 +85,7 @@ function deleteDataAgsTemp(nama, id, row, post_id=""){
   var p_id = "";
   console.log('data_search '+data_search);
   if(post_id==""){
-    p_id = "-";
+    p_id = "";
   } else {
     p_id = post_id;
   }
@@ -97,7 +97,11 @@ function deleteDataAgsTemp(nama, id, row, post_id=""){
       dataType: "JSON",
       success: function(data){
         alert('Data Berhasil Dihapus');
-        loadDataAgsTemp(p_id);
+        if (post_id == "") {
+          loadDataAgsTemp();
+        } else {
+          cari();
+        }
       },
       error: function (jqXHR, textStatus, errorThrown){
         alert('Error deleting data');
@@ -130,6 +134,8 @@ function loadDataSimpTemp(post_id = ""){
 
 function deleteDataSimpTemp(nama, id, row, post_id=""){
   console.clear();
+  console.log('this');
+  
   _nama = nama;
   if(confirm('Apakah Anda yakin akan menghapus data simpanan "'+_nama+'" ?')){
     $.ajax({
@@ -139,7 +145,12 @@ function deleteDataSimpTemp(nama, id, row, post_id=""){
       dataType: "JSON",
       success: function(data){
         alert('Data Berhasil Dihapus');
-        loadDataSimpTemp();
+        
+        if (post_id == "") {
+          loadDataSimpTemp();
+        } else {
+          cari();
+        }
       },
       error: function (jqXHR, textStatus, errorThrown){
         alert('Error deleting data');
@@ -195,6 +206,7 @@ function doPosting(){
       success: function(data){
         if(data.status){
           alert('Posting Berhasil!!!');
+          clear_table()
           console.log('data_search '+data_search);
           $('#alert_container').hide();
         } else {
@@ -207,4 +219,24 @@ function doPosting(){
       }
     });
   }
+}
+
+function check_report_existing(){
+  $.ajax({
+  	url: base_url + "post_angsuran/check_log_existing/" + $('#input_report_id').val(),
+    type: "GET",
+    dataType: "JSON",
+  	success: function (data) {
+      if (document.getElementById("table_post_angsuran").tBodies[0].rows.length > 0 && document.getElementById("table_post_simpanan").tBodies[0].rows.length > 0){
+        if (data.status) {
+          // alert('oke');
+          doPosting()
+        } else {
+        	alert('gagal, data sudah ada');
+        }
+      } else {
+        alert('no data');
+      }
+  	}
+  });
 }

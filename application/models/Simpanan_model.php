@@ -151,9 +151,10 @@ class Simpanan_model extends CI_Model{
       foreach($query->result_array() as $row)
       {
         $output[] = array(
+          'base_id'    => $row["id"],
           'name'       => $row["nama"],
           'id'         => 'AG'.sprintf('%04d', $row["id"]),
-          'identitas'  => $row["identitas"],
+          'identitas'  => strval($row["identitas"]),
           'image'      => ($row["file_pic"] == null || $row["file_pic"] == "") ? 'photo_default.jpg' : $row["file_pic"],
         );
       }

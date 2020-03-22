@@ -337,6 +337,12 @@ function jin_date_ina($date_sql, $tipe = 'full', $time = false) {
 			}
 		}
 		return $date;
-	}
+  }
+  
+  function report_helper1($param){
+    for ($i = 0; $i < sizeof($param); $i++)
+      $s .= $param[$i] . "\n";
+    echo $s;
+  }
 
  ?>

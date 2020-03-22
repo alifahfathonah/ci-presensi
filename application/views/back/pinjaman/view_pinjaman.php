@@ -88,7 +88,8 @@
             <div class="form-group row">
               <label for="inputEmail3" class="col-sm-4 col-form-label">Nominal </label>
               <div class="col-sm-8">
-                <input type="text" class="form-control form-control-sm" id="input_jumlah_pinjaman" name="input_jumlah_pinjaman" onkeypress="return isNumberKey(event)">
+                <input type="text" class="form-control form-control-sm" id="input_jumlah_pinjaman" name="input_jumlah_pinjaman" onkeypress="return isNumberKey(event)" >
+                
                 <small id="input_jumlah_pinjaman_error" class="text-danger"></small>
               </div>
             </div>
@@ -107,11 +108,12 @@
 
             # ambil suku bunga
           	foreach ($suku_bunga as $row) {
-          		$bunga = $row->opsi_val;
-          	}
+          		$bunga = $row->bg_pinjam;
+            }
+            
           	# ambil biaya admin
           	foreach ($biaya as $row) {
-          		$biaya_adm = $row->opsi_val;
+          		$biaya_adm = $row->biaya_adm;
           	}
 
             ?>
