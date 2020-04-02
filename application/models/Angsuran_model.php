@@ -91,6 +91,7 @@ class Angsuran_model extends CI_Model{
     $this->db->select('*');
     $this->db->from('tbl_pinjaman_d');
     $this->db->where('pinjam_id', $pinjam_id);
+    $this->db->where('is_del', 0);
     $this->db->order_by('tgl_bayar', 'ASC');
     $query = $this->db->get();
     if($query->num_rows()>0){
@@ -141,9 +142,10 @@ class Angsuran_model extends CI_Model{
     $sim_sukarela = $this->input->post('input_simpanan_sukarela');
     $sim_wajib    = $this->input->post('input_simpanan_wajib');
 
-    $date = date_create_from_format('d M Y H:i', $this->input->post('input_tanggal_trans'));
-    $timestamp = $date->getTimestamp();
-    $tgl_trans = date('Y-m-d H:i', $timestamp);
+    // $date = date_create_from_format('d M Y H:i', $this->input->post('input_tanggal_trans'));
+    // $timestamp = $date->getTimestamp();
+    // $tgl_trans = date('Y-m-d H:i', $timestamp);
+    $tgl_trans = date("Y-m-d H:i", strtotime($this->input->post('input_tanggal_trans')));
 
     $data = array(
       'tgl_bayar'		=> $tgl_trans,
@@ -160,9 +162,10 @@ class Angsuran_model extends CI_Model{
     );
 
     $data_SimSuk = array(
-      'tgl_transaksi'	=> $this->input->post('input_tanggal_trans'),
+      'tgl_transaksi'	=> $tgl_trans,
       'anggota_id'		=> $this->input->post('input_anggota_id'),
       'jenis_id'			=> '32',
+      'pinjam_id'     => $this->input->post('input_nomor_pinjaman_id'),
       'jumlah'				=> str_replace(',', '', $this->input->post('input_simpanan_sukarela')),
       'keterangan'		=> 'Simpanan sukarela',
       'akun'					=> 'Setoran',
@@ -175,9 +178,10 @@ class Angsuran_model extends CI_Model{
     );
 
     $data_SimWaj = array(
-      'tgl_transaksi'	=>	$this->input->post('input_tanggal_trans'),
+      'tgl_transaksi'	=>  $tgl_trans,
       'anggota_id'		=>	$this->input->post('input_anggota_id'),
       'jenis_id'			=>	'41',
+      'pinjam_id'     =>  $this->input->post('input_nomor_pinjaman_id'),
       'jumlah'				=>	str_replace(',', '', $this->input->post('input_simpanan_wajib')),
       'keterangan'		=> 	'Simpanan wajib',
       'akun'					=>	'Setoran',
@@ -190,16 +194,20 @@ class Angsuran_model extends CI_Model{
     );
 
     $this->db->trans_start();
-    if($sim_sukarela != '' && $sim_wajib != '' && $cek == '0'){
+    if($sim_sukarela != '0' && $sim_wajib != '0' && $cek == '0'){
       $this->db->insert('tbl_pinjaman_d', $data);
       $this->db->insert('tbl_trans_sp', $data_SimSuk);
       $this->db->insert('tbl_trans_sp', $data_SimWaj);
+    } else if ($sim_sukarela == '0' && $sim_wajib == '0' && $cek == '0') {
+      $this->db->insert('tbl_pinjaman_d', $data);
+      // $this->db->insert('tbl_trans_sp', $data_SimSuk);
+      // $this->db->insert('tbl_trans_sp', $data_SimWaj);
     }
-    else if($sim_sukarela == '' && $sim_wajib != '' && $cek == '0') {
+    else if($sim_sukarela == '0' && $sim_wajib != '0' && $cek == '0') {
       $this->db->insert('tbl_pinjaman_d', $data);
       $this->db->insert('tbl_trans_sp', $data_SimWaj);
     }
-    else if($sim_sukarela != '' && $sim_wajib == '' && $cek == '0'){
+    else if($sim_sukarela != '0' && $sim_wajib == '0' && $cek == '0'){
       $this->db->insert('tbl_pinjaman_d', $data);
       $this->db->insert('tbl_trans_sp', $data_SimSuk);
     }

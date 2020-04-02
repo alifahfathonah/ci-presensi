@@ -52,34 +52,86 @@ $(document).ready(function() {
   fetch_data();
 
   var sample_data = new Bloodhound({
-    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-    queryTokenizer: Bloodhound.tokenizers.whitespace,
-    prefetch: base_url + "pinjaman/fetch_autocomplete",
-    remote:{
-      url: base_url + "pinjaman/fetch_autocomplete/%QUERY",
-      wildcard:'%QUERY'
-    }
+  	datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+  	queryTokenizer: Bloodhound.tokenizers.whitespace,
+  	prefetch: base_url + "simpanan/fetch_autocomplete",
+  	// prefetch:'<?php echo base_url(); ?>autocomplete/fetch',
+  	remote: {
+  		url: base_url + "simpanan/fetch_autocomplete/%QUERY",
+  		// url:'<?php echo base_url(); ?>autocomplete/fetch/%QUERY',
+  		wildcard: '%QUERY'
+  	}
   });
+
+  // console.log(sample_data);
+
 
   var img_url = base_url + "uploads/anggota/";
 
   $('#prefetch .typeahead').typeahead(null, {
-    name: 'sample_data',
-    display: 'name',
-    source:sample_data,
-    limit:10,
-    templates:{
-      suggestion:Handlebars.compile(
-        '<div class="row" onclick="prev({{identitas}})">'+
-        '<div class="col-md-2" style="padding-right:5px; padding-left:5px;">'+
-        '<img id="img_cilik_{{identitas}}" src="'+img_url+'{{image}}" class="img-thumbnail" width="48" />'+
-        '</div>'+
-        '<div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{name}}<br>ID: {{id}}</div>'+
-        '</div>')
-      }
-    });
+  name: 'sample_data',
+  display: 'name',
+  source: sample_data,
+  limit: 10,
+  templates: {
+  	suggestion: Handlebars.compile(
+  		'<div class="row" onclick="prev({{base_id}})">' +
+  		'<div class="col-md-2" style="padding-right:5px; padding-left:5px;">' +
+  		'<img id="img_cilik_{{base_id}}" src="' + img_url + '{{image}}" class="img-thumbnail" width="48" />' +
+  		'</div>' +
+  		'<div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{name}}<br>ID: {{id}}</div>' +
+  		'</div>')
+  }
+  });
 
   });
+
+  function prev(identitas) {
+  	value = $('#img_cilik_' + identitas).attr('src');
+  	console.log(value);
+  	id_anggota = identitas;
+  	$('#input_jumlah_simpanan').val("");
+    $('#img_prev').attr('src', value);
+    
+    //   if(typeof identitas !== "undefined" ){
+    //     value = $('#img_cilik_'+identitas).attr('src');
+    //     console.log(value);
+    //     $('#img_prev').attr('src', value);
+    //   } else {
+    //     $('#img_prev').attr('src', base_url + "uploads/photo_default.jpg");
+    //   }
+    
+  }
+
+  // var sample_data = new Bloodhound({
+  //   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+  //   queryTokenizer: Bloodhound.tokenizers.whitespace,
+  //   prefetch: base_url + "pinjaman/fetch_autocomplete",
+  //   remote:{
+  //     url: base_url + "pinjaman/fetch_autocomplete/%QUERY",
+  //     wildcard:'%QUERY'
+  //   }
+  // });
+
+  // var img_url = base_url + "uploads/anggota/";
+
+  // $('#prefetch .typeahead').typeahead(null, {
+  //   name: 'sample_data',
+  //   display: 'name',
+  //   source:sample_data,
+  //   limit:10,
+  //   templates:{
+  //     suggestion:Handlebars.compile(
+  //       '<div class="row" onclick="prev({{identitas}})">'+
+  //       '<div class="col-md-2" style="padding-right:5px; padding-left:5px;">'+
+  //       '<img id="img_cilik_{{identitas}}" src="'+img_url+'{{image}}" class="img-thumbnail" width="48" />'+
+  //       '</div>'+
+  //       '<div class="col-md-10" style="padding-right:5px; padding-left:5px;">{{name}}<br>ID: {{id}}</div>'+
+  //       '</div>')
+  //     }
+  //   });
+
+  // });
 
   function pilih_status_lunas(){
     param = $('#filter_status_pinjam').val();
@@ -89,15 +141,15 @@ $(document).ready(function() {
     $('#filter_status_pinjam').val(param);
   }
 
-  function prev(identitas){
-    if(typeof identitas !== "undefined" ){
-      value = $('#img_cilik_'+identitas).attr('src');
-      console.log(value);
-      $('#img_prev').attr('src', value);
-    } else {
-      $('#img_prev').attr('src', base_url + "uploads/photo_default.jpg");
-    }
-  }
+  // function prev(identitas){
+  //   if(typeof identitas !== "undefined" ){
+  //     value = $('#img_cilik_'+identitas).attr('src');
+  //     console.log(value);
+  //     $('#img_prev').attr('src', value);
+  //   } else {
+  //     $('#img_prev').attr('src', base_url + "uploads/photo_default.jpg");
+  //   }
+  // }
 
   function fetch_data(start_date='', end_date='', filter_status_pinjam=''){
     console.log('filter_status_pinjam : '+filter_status_pinjam);

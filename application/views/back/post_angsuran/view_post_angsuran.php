@@ -22,7 +22,7 @@
           <input id="input_report_id" type="text" class="form-control" placeholder="Report ID" aria-label="Report ID didapat setelah generate file excel" aria-describedby="button-addon4">
           <div class="input-group-append" id="button-addon4">
             <button onclick="cari()" class="btn btn-sm btn-outline-secondary" type="button" id="button-addon1"><b class="fa fa-search"></b></button>
-            <button onclick="check_report_existing()" type="button" class="btn btn-sm btn-danger"><b class="fa fa-upload"></b> Posting</button>
+            <button id="posting_btn" onclick="check_report_existing()" type="button" class="btn btn-sm btn-danger"><b class="fa fa-upload"></b> Posting</button>
           </div>
         </div>
         <!-- <div class="input-group-prepend">

@@ -7,9 +7,9 @@ var parameter;
 var get_data;
 var data_search;
 $(document).ready(function(){
+  $('#alert_container').hide();
   $('body').addClass('open');
   $('.blockquote-footer').hide();
-  $('#alert_container').hide();
   $("#input_report_id").focus();
   $("#input_report_id").keyup(function(){
     var id = $('#input_report_id').val();
@@ -47,6 +47,7 @@ function getDataTemp(){
         $('.blockquote-footer').hide();
         loadDataAgsTemp();
         loadDataSimpTemp();
+        $('#input_report_id').val();
       } else {
         alert('Get Data Angsuran Temp Error');
       }
@@ -177,6 +178,7 @@ function clear_table(){
     }
   });
   console.log('data_search '+data_search);
+  $('#input_report_id').val();
 }
 
 function cari(){
@@ -197,27 +199,32 @@ function doPosting(){
   if(report_id === ""){
     alert('Silahkan masukkan report id');
   } else {
-    $('#alert_container').show();
-    $.ajax({
-      url : base_url+"post_angsuran/bulk_posting/",
-      type: "POST",
-      data: {param: [report_id]},
-      dataType: "JSON",
-      success: function(data){
-        if(data.status){
-          alert('Posting Berhasil!!!');
-          clear_table()
-          console.log('data_search '+data_search);
-          $('#alert_container').hide();
-        } else {
+    if (confirm('Apakah Anda yakin utk posting semua data ini ?')) {
+      $('#posting_btn').attr('readonly');
+      $('#alert_container').show();
+      $.ajax({
+        url: base_url + "post_angsuran/bulk_posting/",
+        type: "POST",
+        data: { param: [report_id] },
+        dataType: "JSON",
+        success: function (data) {
+          if (data.status) {
+            alert('Posting Berhasil!!!');
+            clear_table()
+            console.log('data_search ' + data_search);
+            $('#alert_container').hide();
+            $('#input_report_id').val();
+          } else {
+            alert('Error Upload Posting');
+            $('#alert_container').hide();
+          }
+          $('#posting_btn').removaAttr('readonly');
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
           alert('Error Upload Posting');
-          $('#alert_container').hide();
         }
-      },
-      error: function (jqXHR, textStatus, errorThrown){
-        alert('Error Upload Posting');
-      }
-    });
+      });
+    }
   }
 }
 

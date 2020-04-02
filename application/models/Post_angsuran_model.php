@@ -80,6 +80,49 @@ class Post_angsuran_model extends CI_Model{
     return $this->db->affected_rows();
   }
 
+  function validasi_posting($id){
+    $CI = &get_instance();
+    $CI->load->model('Pinjaman_model', 'Angsuran_model');
+
+    $data_pinjam   = $this->Pinjaman_model->get_data_pinjam($id);
+    if(!empty($data_pinjam)){
+      $total_tagihan = $data_pinjam->tagihan;
+
+      $angsuran_sudah_dibayarkan      = $this->Angsuran_model->get_data_angsuran($id);
+
+      if (empty($angsuran_sudah_dibayarkan)) { //jika BELUM ADA ANGSURAN
+        return true; //do bulk posting
+      } else {                                     //jika SUDAH ADA ANGSURAN 
+        $total_jumlah_angsuran = 0;
+        foreach ($angsuran_sudah_dibayarkan as $r) {
+          $total_jumlah_angsuran += $r->jumlah_bayar; //NOMINAL ANGSURAN  YG SUDAH DIBAYAR
+        }
+        if ($total_jumlah_angsuran === $total_tagihan) {
+          return false; // SKIP POSTINGAN
+        } else if ($total_jumlah_angsuran < $total_tagihan) {
+          return true; //do bulk posting
+        }
+      }
+    } else {
+      return false;
+    }
+  }
+
+  function validasi_simpanan($id_anggota){ //cek periode simpanan
+    $id = $id_anggota;
+    $now = date('Y-m');
+    $sql = "SELECT id FROM tbl_trans_sp
+    WHERE LEFT(tgl_transaksi, 7) = '$now' and anggota_id = '$id' ";
+    $query = $this->db->query($sql)->num_rows();
+
+    if($query == 0){
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
   public function insertPostingSimpanan($post_id) {
     $sql = "select * FROM tbl_temp_postangsuran where simpanan_sukarela != '0' and simpanan_wajib != '0' and view_client = '".$post_id."' and view_temp = '1' group by id_anggota ";
     $query = $this->db->query($sql)->result();
@@ -96,88 +139,119 @@ class Post_angsuran_model extends CI_Model{
       $data2 = array();
       $data3 = array();
 
-      foreach($query as $r) {
-        $data[$n] = array(
-          'tgl_transaksi'			 =>	$now,
-          'anggota_id'			   =>	$r->id_anggota,
-          'jenis_id'				   =>	'32',
-          'jumlah'				     =>	$r->simpanan_sukarela,
-          'keterangan'			   => 'Simpanan sukarela',
-          'akun'					     =>	'Setoran',
-          'dk'				    	   =>	'D',
-          'kas_id'				     =>	'1',
-          'user_name'				   => $this->session->userdata('username'),
-          'nama_penyetor'			 => 'post from import',
-          'no_identitas'			 => '1803oka',
-          'alamat'			       => '-',
-          'kd_post'				     => '1'
-        );
-
-        $this->db->insert('tbl_trans_sp',$data[$n]);
-        $data[$n]['inserted_id'] = $this->db->insert_id();
-
-        $this->save_log($r->view_client, 'tbl_trans_sp',  $data[$n]['inserted_id']);
-
-        $n++;
-      }
-
-      foreach($query as $r) {
-        $data2[$o] = array(
-          'tgl_transaksi'			=>	$now,
-          'anggota_id'			  =>	$r->id_anggota,
-          'jenis_id'				  =>	'41',
-          'jumlah'				    =>	$r->simpanan_wajib,
-          'keterangan'			  => 	'Simpanan wajib',
-          'akun'					    =>	'Setoran',
-          'dk'					      =>	'D',
-          'kas_id'				    =>	'1',
-          'user_name'				  => 	$this->session->userdata('username'),
-          'nama_penyetor'			=> 	'post from import',
-          'no_identitas'			=> 	'1803oka',
-          'alamat'				    => 	'-',
-          'kd_post'				    => 	'1'
-        );
-
-        $this->db->insert('tbl_trans_sp', $data2[$o]);
-        $data2[$o]['inserted_id'] = $this->db->insert_id();
-
-        $this->save_log($r->view_client, 'tbl_trans_sp',  $data2[$o]['inserted_id']);
-        $o++;
-      }
-
-      foreach($query2 as $r) {
+      foreach ($query2 as $r) {
         $data3[$p] = array(
-          'tgl_bayar'			=>	$now,
-          'pinjam_id'			=>	$r->id_pinjaman,
-          'angsuran_ke'		=>	($r->bln_sudah_angsur)+1,
-          'jumlah_bayar'	=>	$r->ags_per_bulan,
-          'denda_rp'			=>	'0',
-          'ket_bayar'			=>	'Angsuran',
-          'kas_id'			  =>	$r->kas_id,
-          'jns_trans'			=>	'48',
-          'keterangan'		=>	$r->keterangan."_oka",
-          'user_name'			=> 	$this->session->userdata('username'),
-          'kd_post'			  => 	'1'
+          'tgl_bayar'      =>  $now,
+          'pinjam_id'      =>  $r->id_pinjaman,
+          'angsuran_ke'    => ($r->bln_sudah_angsur) + 1,
+          'jumlah_bayar'  =>  $r->ags_per_bulan,
+          'denda_rp'      =>  '0',
+          'ket_bayar'      =>  'Angsuran',
+          'kas_id'        =>  $r->kas_id,
+          'jns_trans'      =>  '48',
+          'keterangan'    =>  $r->keterangan . "_oka",
+          'user_name'      =>   $this->session->userdata('username'),
+          'kd_post'        =>   '1'
         );
 
-        $this->db->insert('tbl_pinjaman_d',$data3[$p]);
-        $data3[$p]['inserted_id'] = $this->db->insert_id();
+        $validation_value = $this->validasi_posting($r->id_pinjaman); //cek validasi bulk posting
 
-        $this->save_log($r->view_client, 'tbl_pinjaman_d',  $data3[$p]['inserted_id']);
+        if ($validation_value) {
+          $this->db->insert('tbl_pinjaman_d', $data3[$p]);
+          $data3[$p]['inserted_id'] = $this->db->insert_id();
+          $this->save_log($r->view_client, 'tbl_pinjaman_d',  $data3[$p]['inserted_id']);
+        }
+
         $p++;
       }
 
+      $id = $r->id_anggota;
+      $siki = date('Y-m');
+      $sql = "select id FROM tbl_trans_sp WHERE LEFT(tgl_transaksi, 7) = '$siki' and anggota_id = '$id' and is_del = 0 ";
+      $validation_simpanan_value = $this->db->query($sql)->num_rows();
+
+      // $validation_simpanan_value = $this->validasi_simpanan($r->id_anggota); //cek validasi simpanan
+
+      // if (intval($validation_simpanan_value) === 0) {
+        foreach ($query as $r) {
+          $data[$n] = array(
+            'tgl_transaksi'       =>  $now,
+            'anggota_id'         =>  $r->id_anggota,
+            'jenis_id'           =>  '32',
+            'pinjam_id'          =>  $r->id_pinjaman,
+            'jumlah'             =>  $r->simpanan_sukarela,
+            'keterangan'         => 'Simpanan sukarela',
+            'akun'               =>  'Setoran',
+            'dk'                 =>  'D',
+            'kas_id'             =>  '1',
+            'user_name'           => $this->session->userdata('username'),
+            'nama_penyetor'       => 'post from import',
+            'no_identitas'       => '1803oka '. $validation_simpanan_value,
+            'alamat'             => '-',
+            'kd_post'             => '1'
+          );
+
+          $siki = date('Y-m');
+          $sql = "select id FROM tbl_trans_sp WHERE LEFT(tgl_transaksi, 7) = '$siki' and anggota_id = '$r->id_anggota' and keterangan = 'Simpanan sukarela' and is_del = 0 ";
+          $validation_simpanan_value = $this->db->query($sql)->num_rows();
+
+          if($validation_simpanan_value == 0){
+            $this->db->insert('tbl_trans_sp', $data[$n]);
+            $data[$n]['inserted_id'] = $this->db->insert_id();
+
+            $this->save_log($r->view_client, 'tbl_trans_sp',  $data[$n]['inserted_id']);
+          }
+
+          $n++;
+        }
+
+        foreach ($query as $r) {
+          $data2[$o] = array(
+            'tgl_transaksi'      =>  $now,
+            'anggota_id'        =>  $r->id_anggota,
+            'jenis_id'          =>  '41',
+            'pinjam_id'         =>  $r->id_pinjaman,
+            'jumlah'            =>  $r->simpanan_wajib,
+            'keterangan'        =>  'Simpanan wajib',
+            'akun'              =>  'Setoran',
+            'dk'                =>  'D',
+            'kas_id'            =>  '1',
+            'user_name'          =>   $this->session->userdata('username'),
+            'nama_penyetor'      =>   'post from import',
+            'no_identitas'      =>   '1803oka ' . $validation_simpanan_value,
+            'alamat'            =>   '-',
+            'kd_post'            =>   '1'
+          );
+
+        $siki = date('Y-m');
+        $sql = "select id FROM tbl_trans_sp WHERE LEFT(tgl_transaksi, 7) = '$siki' and anggota_id = '$r->id_anggota' and keterangan = 'Simpanan wajib'  and is_del = 0 ";
+        $validation_simpanan_value = $this->db->query($sql)->num_rows();
+
+          if ($validation_simpanan_value == 0) {
+            $this->db->insert('tbl_trans_sp', $data2[$o]);  
+            $data2[$o]['inserted_id'] = $this->db->insert_id();
+
+            $this->save_log($r->view_client, 'tbl_trans_sp',  $data2[$o]['inserted_id']);
+          }
+
+          $o++;
+        }
+
+      // }
+
       $result = array(
         "status" => TRUE,
-        "tbl_trans_sp "  => sizeof($data),
-        "tbl_trans_sp " => sizeof($data2),
+        "tbl_trans_sp "   => sizeof($data),
+        "tbl_trans_sp "   => sizeof($data2),
         "tbl_pinjaman_d " => sizeof($data3)
       );
 
       return $result;
     } else {
       $result = array(
-        "status" => FALSE
+        "status" => FALSE,
+        "sizeof_query1"  => sizeof($query),
+        "sizeof_query2"  => sizeof($query2),
       );
 
       return $result;

@@ -460,4 +460,15 @@ class Angsuran extends CI_Controller{
       $pdf->Output();
     }
 
+    function test(){
+    $date = date_create_from_format('d M Y H:i', '30 Mar 2020 19:07');
+    $timestamp = $date->getTimestamp();
+    $tgl_trans = date('Y-m-d H:i', $timestamp);
+    echo $tgl_trans."<br>";
+
+    $orgDate = "30 Mar 2020 19:07";
+    $newDate = date("Y-m-d H:i", strtotime($orgDate));
+    echo "New date format is: " . $newDate . " (MM-DD-YYYY)";
+    }
+
 }

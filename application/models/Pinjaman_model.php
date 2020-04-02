@@ -89,6 +89,7 @@ class Pinjaman_model extends CI_Model{
     $this->db->select('SUM(jumlah_bayar) AS total');
     $this->db->from('tbl_pinjaman_d');
     $this->db->where('pinjam_id',$id);
+    $this->db->where('is_del', 0);
     $query = $this->db->get();
     return $query->row();
   }
@@ -99,6 +100,7 @@ class Pinjaman_model extends CI_Model{
     $this->db->from('tbl_pinjaman_d');
     $this->db->where('pinjam_id',$id);
     $this->db->where('ket_bayar','Angsuran');
+    $this->db->where('is_del', 0);
     $query = $this->db->get();
     return $query->num_rows();
   }
@@ -107,6 +109,7 @@ class Pinjaman_model extends CI_Model{
     $this->db->select('SUM(denda_rp) AS total_denda');
     $this->db->from('tbl_pinjaman_d');
     $this->db->where('pinjam_id',$id);
+    $this->db->where('is_del', 0);
     $query = $this->db->get();
     return $query->row();
   }
@@ -296,7 +299,7 @@ class Pinjaman_model extends CI_Model{
     $this->db->where($where);
     $this->db->update('tbl_pinjaman_h', $object);
 
-    $this->db->where($where);
+    $this->db->where('pinjam_id', $where['id']);
     $this->db->update('tbl_pinjaman_d', $object);
 
     if ($this->db->trans_status() === FALSE) {

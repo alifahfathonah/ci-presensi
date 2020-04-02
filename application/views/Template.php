@@ -312,13 +312,13 @@
               <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('anggota/laporan_anggota'); ?>">Data Anggota</a></li>
               <li><i class=" fa fa-folder-open-o"></i><a href="<?php echo base_url('kasanggota'); ?>">Kas Anggota</a></li>
               <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('laptranskas'); ?>">Transaksi Kas</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Saldo Kas</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Buku Besar</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-basic.html">Kas Simpanan</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Kas Pinjaman</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Neraca Saldo</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">Laba Rugi</a></li>
-              <li><i class="fa fa-folder-open-o"></i><a href="tables-data.html">SHU</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('lapsaldo'); ?>">Saldo Kas</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('lapbukubesar'); ?>">Buku Besar</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('lapsimpanan'); ?>">Kas Simpanan</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('lappinjaman'); ?>">Kas Pinjaman</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('neraca'); ?>">Neraca Saldo</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('labarugi'); ?>">Laba Rugi</a></li>
+              <li><i class="fa fa-folder-open-o"></i><a href="<?php echo base_url('shu'); ?>">SHU</a></li>
             </ul>
           </li>
 
@@ -444,6 +444,8 @@
 
   <script type="text/javascript">
     var $ = jQuery;
+    $('body').removeClass('glyphicon glyphicon-calendar');
+    $('body').removeClass('glyphicon glyphicon-chevron-left');
   </script>
 
   <script src="<?php
@@ -528,6 +530,27 @@
                   case "laptranskas":
                     echo base_url() . "assets/js/laptranskas.js";
                     break;
+                  case "lapsaldo":
+                    echo base_url() . "assets/js/lapsaldo.js";
+                    break;
+                  case "lapbukubesar":
+                    echo base_url() . "assets/js/lapbukubesar.js";
+                    break;
+                  case "lapsimpanan":
+                    echo base_url() . "assets/js/lapsimpanan.js";
+                    break;
+                  case "lappinjaman":
+                    echo base_url() . "assets/js/lappinjaman.js";
+                    break;
+                  case "neraca":
+                    echo base_url() . "assets/js/neraca.js";
+                    break;
+                  case "labarugi":
+                    echo base_url() . "assets/js/labarugi.js";
+                    break;
+                  case "shu":
+                    echo base_url() . "assets/js/shu.js";
+                    break;  
                 }
                 ?>"></script>
 

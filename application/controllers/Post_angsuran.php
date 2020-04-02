@@ -11,7 +11,7 @@ class Post_angsuran extends CI_Controller{
   public function __construct()
   {
     parent::__construct();
-    $this->load->model(array('Post_angsuran_model', 'Anggota_model'));
+    $this->load->model(array('Post_angsuran_model', 'Anggota_model', 'Pinjaman_model', 'Angsuran_model'));
     $this->load->library(array('ion_auth', 'form_validation'));
     $this->load->helper(array('url', 'language', 'app_helper'));
 
@@ -488,6 +488,55 @@ class Post_angsuran extends CI_Controller{
     } else {
       echo json_encode(array('status' => true));
     }
+  }
+
+  function test_validasi_posting($id){
+
+    // $data_anggota     = $this->Anggota_model->get_by('id', $data_pinjam->anggota_id);
+    // $row_pinjam       = $data_pinjam;
+
+    // $kas_id           = $this->Angsuran_model->get_data_kas();
+    // $angsuran         = $this->Angsuran_model->get_data_angsuran($id);
+
+    // $hitung_denda     = $this->Pinjaman_model->get_jml_denda($id);
+    // $hitung_dibayar   = $this->Pinjaman_model->get_jml_bayar($id);
+    // $sisa_ags         = $this->Pinjaman_model->get_record_bayar($id);
+
+    // $simulasi_tagihan = $this->Pinjaman_model->get_simulasi_pinjaman($id);
+    
+    $data_pinjam   = $this->Pinjaman_model->get_data_pinjam($id);
+    $lama_angsuran = $data_pinjam->lama_angsuran;
+    $ags_per_bulan = $data_pinjam->ags_per_bulan;
+    $total_tagihan = $data_pinjam->tagihan;
+
+    $angsuran_sudah_dibayarkan      = $this->Angsuran_model->get_data_angsuran($id);
+
+    if(count($angsuran_sudah_dibayarkan) === 0){ //jika BELUM ADA ANGSURAN
+      //do bulk posting
+    } else {                                     //jika SUDAH ADA ANGSURAN 
+      $total_jumlah_angsuran = 0;                
+      foreach($angsuran_sudah_dibayarkan as $r){
+        $total_jumlah_angsuran += $r->jumlah_bayar; //NOMINAL ANGSURAN  YG SUDAH DIBAYAR
+      }
+      if($total_jumlah_angsuran === $total_tagihan){
+        // SKIP POSTINGAN
+      } else if ($total_jumlah_angsuran < $total_tagihan) {
+        //do bulk posting
+      }
+    }
+
+  }
+
+  function delete_percobaan_bulk(){
+    $sql = "delete from `tbl_trans_sp` where no_identitas like '%oka%'; delete from `tbl_pinjaman_d` where keterangan like '%oka%'; DELETE FROM `tbl_temp_postangsuran`;";
+  }
+
+  function tes(){
+    $id = 25;
+    $siki = date('Y-m');
+    $sql = "select id FROM tbl_trans_sp WHERE LEFT(tgl_transaksi, 7) = '$siki' and anggota_id = '$id' and is_del = 0 ";
+    $validation_simpanan_value = $this->db->query($sql)->num_rows();
+    echo $validation_simpanan_value;
   }
 
 }
