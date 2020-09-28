@@ -23,7 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost:7777/koperasi_v1';
+$config['base_url'] = 'https://hcp1.co.id/presensi';
+// $config['base_url'] = 'http://a93fd1b4672d.ngrok.io/presensi';
+// $config['base_url'] = "http://".$_SERVER['HTTP_HOST'].
+//     str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+// $config['base_url'] = 'http://7cd5f32f.ngrok.io/inventaris_smpsusteran';
+https://67c5a5f6.ngrok.io
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +40,7 @@ $config['base_url'] = 'http://localhost:7777/koperasi_v1';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -324,7 +329,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = 'designedwithfullofloveandhappiness';
+$config['encryption_key'] = 'bismillah';
 
 /*
 |--------------------------------------------------------------------------
